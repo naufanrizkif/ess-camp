@@ -6,6 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ESS Camp">
 <meta name="theme-color" content="#8fd3f5">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
 <title>ESS Camp</title>
 <style>
 :root{--ink:#1b1b1b;--bg:#dfe9cf;--lime:#c9ec5a;--org:#ff9a5c;--pink:#ff9ecb;--lav:#a99bf5;--sky:#8fd3f5;--yel:#ffd23f;--grn:#3fbf6b;--red:#ff5a4f}
@@ -167,16 +169,16 @@ function path(){const cur=LS.findIndex(l=>!S.done[l.id]);let h=hero()+"<main>",l
  h+=`<div class="nd" style="transform:translateX(${off}px)">${st=="cur"?'<i class="go">MULAI</i>':""}<button class="nb node ${st}" style="--c:${C[l.ji]}" ${st=="lock"?"disabled":""} onclick="start(${l.id})">${st=="done"?"★":st=="lock"?"🔒":av(FJ[l.ji],56)}</button></div>`});
  return h+(cur<0?`<div class="nb card" style="background:var(--yel)"><h2>🏆 Semua pos selesai!</h2>Ulangi pos mana saja untuk latihan.</div>`:"")+"</main>"}
 function start(id){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}L={l:LS[id],s:0,a:null,xp:0};lesson()}
-function close(){L=null;$("#ov").hidden=true;render()}
+function tutup(){L=null;$("#ov").hidden=true;render()}
 function lesson(){const l=L.l,n=l.pts.length,tot=n+(l.i==l.k-1?1:0);if(L.s>=tot)return fin();
  let body,foot="";const q=Q[l.ji];
  if(L.s<n){const p=l.pts[L.s];S.paham[p[0]]=1;body=`<div class="say">${av(S.av,96)}<div class="nb bub">${p[1]}</div></div>`;foot=`<button class="nb btn big" style="background:var(--grn)" onclick="L.s++;lesson()">PAHAM, LANJUT</button>`}
  else{body=`<h3>${q.q}</h3>`+q.o.map((o,i)=>`<button class="nb opt ${L.a===null?"":i==q.a?"r":i==L.a?"w":""}" ${L.a===null?"":"disabled"} onclick="pick(${i})">${o}</button>`).join("");
   if(L.a!==null)foot=`<div class="fb ${L.a==q.a?"r":"w"}"><b>${L.a==q.a?"Mantap! 🎉":"Belum tepat"}</b><p>${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
- $("#ov").hidden=false;$("#ov").innerHTML=`<div class="top"><button class="x" onclick="close()">✕</button><div class="pb"><i style="width:${L.s/tot*100}%"></i></div><b>❤ ${S.hearts}</b></div><div class="bd">${body}</div><div class="ft">${foot}</div>`}
+ $("#ov").hidden=false;$("#ov").innerHTML=`<div class="top"><button class="x" onclick="tutup()">✕</button><div class="pb"><i style="width:${L.s/tot*100}%"></i></div><b>❤ ${S.hearts}</b></div><div class="bd">${body}</div><div class="ft">${foot}</div>`}
 function pick(i){const j=L.l.ji;L.a=i;if(i==Q[j].a){L.xp+=10;S.qok[j]=(S.qok[j]||0)+1}else{S.hearts=Math.max(0,S.hearts-1);S.miss[j]=(S.miss[j]||0)+1}save();lesson()}
 function fin(){const l=L.l,pr=l.id<0,xp=pr?L.xp:S.done[l.id]?5:20+L.xp;S.xp+=xp;if(!pr)S.done[l.id]=1;if(!S.days.includes(today()))S.days.push(today());save();
- $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="close()">KEMBALI KE JALUR</button></div>`}
+ $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="tutup()">KEMBALI KE JALUR</button></div>`}
 const avGrid=()=>`<div class="gr">${AV.map((a,i)=>`<button class="${i==S.av?"sel":""}" onclick="setAv(${i})">${av(i,52)}</button>`).join("")}</div>`;
 function setAv(i){S.av=i;save();if(!$("#ov").hidden&&!L)onb();else render()}
 function onb(){$("#ov").hidden=false;$("#ov").innerHTML=`<div class="bd c"><h2>Selamat datang di<br>ESS Camp ⛺</h2><p>Pilih karaktermu, lalu isi namamu.</p>${avGrid()}<input class="nb inp" placeholder="Nama kamu" value="${esc(S.name)}" oninput="S.name=this.value"></div><div class="ft"><button class="nb btn big" style="background:var(--lime)" onclick="if(S.name.trim()){S.name=S.name.trim();save();$('#ov').hidden=true;render()}">MULAI PETUALANGAN</button></div>`}
