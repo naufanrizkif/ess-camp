@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ESS Camp">
+<meta name="theme-color" content="#8fd3f5">
+<title>ESS Camp</title>
+<style>
+:root{--ink:#1b1b1b;--bg:#dfe9cf;--lime:#c9ec5a;--org:#ff9a5c;--pink:#ff9ecb;--lav:#a99bf5;--sky:#8fd3f5;--yel:#ffd23f;--grn:#3fbf6b;--red:#ff5a4f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:700 16px/1.4 "Avenir Next","Trebuchet MS",system-ui,sans-serif}
+body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0))}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+.nb{border:3px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);background:#fff}
+.btn:active,.node:active,.opt:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.hero{position:relative;height:210px;border-bottom:3px solid var(--ink);border-radius:0 0 30px 30px;overflow:hidden;padding:calc(14px + env(safe-area-inset-top,0)) 16px 0}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.hi{position:relative;display:flex;justify-content:space-between;align-items:center}.hi h1{margin:0;font-size:26px;font-weight:900}.hi small{font-weight:700}
+.avb{border:0;background:none;padding:0}
+.chips{position:absolute;left:16px;right:16px;bottom:14px;display:flex;gap:8px}
+.chip{padding:6px 12px;border-radius:14px;font-weight:900;background:#fff;display:inline-block;margin:6px}.chips .chip{margin:0}
+main{max-width:520px;margin:auto;padding:16px}
+.ban{display:flex;gap:12px;align-items:center;padding:12px 14px;margin:26px 0 14px}.ban span{font-size:32px}.ban small{display:block}.ban b{font-size:18px;font-weight:900}
+.nd{display:flex;justify-content:center;margin:12px 0;position:relative}
+.node{width:76px;height:76px;border-radius:50%;font-size:32px;display:grid;place-items:center;background:var(--c);padding:0;box-shadow:0 7px 0 var(--ink)}
+.node.done{background:var(--grn);color:#fff}.node.lock{background:#cfd6c6;filter:grayscale(1)}
+.node.cur{animation:pulse 1.4s infinite}
+.go{position:absolute;top:-22px;background:var(--ink);color:#fff;font-style:normal;font-size:12px;font-weight:900;padding:3px 10px;border-radius:10px}
+@keyframes pulse{50%{transform:scale(1.07)}}
+nav{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0));display:flex;align-items:flex-end;justify-content:space-around;padding:8px 4px 6px;border-radius:28px;background:#fff7e6;z-index:5}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:6px 0;border-radius:18px;font-size:11px;font-weight:900;color:var(--ink)}
+nav button.on:not(.mid){background:#ffe0a8}
+nav .mid{background:none;padding:0}.bw{position:relative;display:grid;place-items:center;width:68px;height:68px;margin-top:-34px}.bw .blob{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.bw svg+svg{position:relative}
+nav .mid.on b{background:var(--ink);color:#fff;border-radius:8px;padding:0 8px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.g3 .card{margin:0;text-align:center}.g3 h2{font-size:28px;margin:2px 0}
+#ov{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top,0)) 16px calc(14px + env(safe-area-inset-bottom,0))}
+#ov[hidden]{display:none}
+.top{display:flex;gap:12px;align-items:center}.x{border:0;background:none;font-size:24px;font-weight:900}
+.pb{flex:1;height:18px;border:3px solid var(--ink);border-radius:12px;background:#fff;overflow:hidden}.pb i{display:block;height:100%;background:var(--grn);transition:width .3s}
+.bd{flex:1;overflow:auto;padding:20px 0;max-width:520px;width:100%;margin:auto}.bd.c{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ft{max-width:520px;width:100%;margin:auto}
+.say{display:flex;flex-direction:column;align-items:center;gap:14px}.bub{padding:16px;font-size:19px;line-height:1.5}
+.big{width:100%;padding:16px;font-size:17px;font-weight:900}
+.opt{display:block;width:100%;text-align:left;padding:14px;margin-top:12px}.opt.r{background:#b9f0c9}.opt.w{background:#ffc9c3}
+.fb{border:3px solid var(--ink);border-radius:20px;padding:14px;margin-top:10px}.fb.r{background:#b9f0c9}.fb.w{background:#ffc9c3}.fb p{margin:4px 0 10px}
+.bounce{animation:b 1s infinite}@keyframes b{50%{transform:translateY(-12px) rotate(-4deg)}}
+.card{padding:14px;margin-bottom:14px}.row{display:flex;justify-content:space-between;align-items:center}
+h2,h3{margin:8px 0;font-weight:900}
+.wk{display:flex;justify-content:space-between;margin-top:10px}.wk div{text-align:center;font-size:12px}.wk b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);background:#fff;margin-top:4px}.wk .on b{background:var(--yel)}
+.gr{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.gr button{border:3px solid var(--ink);border-radius:16px;background:#fff;padding:4px}.gr .sel{background:var(--lime);box-shadow:3px 3px 0 var(--ink)}
+.inp{width:100%;padding:12px;margin:8px 0}
+.pg{height:14px;border:3px solid var(--ink);border-radius:10px;background:#fff;overflow:hidden;margin:4px 0 10px}.pg i{display:block;height:100%}
+.seg{display:flex;gap:10px;margin-bottom:14px}.seg button{flex:1;padding:10px}.seg .on{background:var(--yel)}
+.st{display:flex;gap:6px;margin-top:8px}.st button{flex:1;padding:8px 0;border:3px solid var(--ink);border-radius:12px;background:#fff;font-size:13px}
+.st .ok.on{background:var(--grn)}.st .x.on{background:var(--red)}.st .na.on{background:#cfd6c6}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div id="ov" hidden></div>
+<nav class="nb"></nav>
+<script>
+const J=[
+{n:"Sambutan Hangat",e:"👋",p:[
+[1,"Sapa dengan senyum dan smiling eyes: “Selamat Datang di EIGER”, tangan kanan di dada kiri. Kalau sedang melayani pelanggan lain, cukup tersenyum."],
+[2,"Beri pelanggan waktu melihat-lihat dulu. Jaga jarak aman minimal 1 meter."],
+[3,"Setelah sekitar 3 menit, hampiri dan tawarkan bantuan. Tanya untuk kegiatan apa, pakai sapaan daerah. Contoh: “Halo Bli, sedang cari sepatu untuk kegiatan apa?”"]]},
+{n:"Layanan & Pengetahuan Produk",e:"🧭",p:[
+[4,"Gali kebutuhan: produk yang dicari, bahan, warna, ukuran."],
+[5,"Jawab pertanyaan dengan benar dan sesuai kebutuhan pelanggan."],
+[6,"Informasikan ketersediaan produk dengan benar."],
+[7,"Saat mengambilkan produk, sebut estimasi waktu. Contoh: “Kami ambilkan ya Kak, mohon ditunggu sekitar 3 menit.”"],
+[8,"Kalau produk kosong, tawarkan solusi (alternatif atau opsi lain), jangan berhenti di “habis”."],
+[9,"Jelaskan keunggulan produk tanpa menunggu ditanya."],
+[10,"Jelaskan garansi tas/jam tangan tanpa menunggu ditanya."],
+[11,"Hindari perilaku negatif: main HP, ngobrol, bergerombol, bercanda, atau melayani sambil mengerjakan hal lain."],
+[12,"Sopan dan ramah lewat pilihan kata, bahasa tubuh, dan cara memanggil pelanggan."],
+[13,"Kalau pelanggan dialihkan ke RA lain, serahkan kebutuhannya dengan jelas sebelum pergi."]]},
+{n:"Pengalaman Mencoba Produk",e:"🥾",p:[
+[14,"Tawarkan pelanggan untuk mencoba produk yang diminati."],
+[15,"Tawarkan bantuan saat mencoba: tas, jaket, sepatu, helm, jas hujan, tenda."],
+[16,"Beri tanggapan atau masukan yang relevan atas produk yang dicoba."],
+[17,"Fitting room bersih, rapi, kunci berfungsi, lampu menyala putih terang."]]},
+{n:"Rekomendasi & Member",e:"⭐",p:[
+[18,"Minta pelanggan cek lagi produknya dan sebutkan fitur yang perlu dicek."],
+[19,"Jelaskan cara perawatan produk tanpa menunggu ditanya."],
+[20,"Tawarkan produk tambahan yang cocok. Contoh: “Ada tambahan lain, Kak? Ini cocok dengan produk tadi.”"],
+[21,"Informasikan promo yang relevan dengan kebutuhan pelanggan."],
+[22,"Tanyakan apakah pelanggan sudah punya member EIGER (EAC)."],
+[23,"Belum member: pandu daftar lewat EIGER Adventure Mobile Apps atau website, tanya nama, lalu mulai panggil dengan nama."],
+[24,"Belum/tidak bersedia member: jelaskan manfaat menjadi member."],
+[25,"Khusus Flagship: berikan nomor transaksi agar bisa lanjut bayar."]]},
+{n:"Kasir & Pembayaran",e:"🧾",p:[
+[26,"Kasir siap melayani."],
+[27,"Salam dan kontak mata saat mulai transaksi, pakai sapaan daerah. Contoh: “Silakan Kak/Pak/Bu/Bli/Mba/Bang.”"],
+[28,"Khusus Flagship: terima nomor transaksi dengan kedua tangan."],
+[29,"Konfirmasi barang: jenis, jumlah, warna, ukuran, dan info barang diskon (tidak masuk hitungan EAC)."],
+[30,"Pastikan tidak ada sensor / tag yang masih terpasang."],
+[31,"Tanya kepemilikan member EAC dan konfirmasi nama pelanggan."],
+[32,"Sudah member: izin scan di HP pelanggan, sebutkan jumlah poin dan masa expired-nya."],
+[33,"Jelaskan program promo atau potongan harga untuk produk yang dibeli."],
+[34,"Stempel kartu garansi, tulis tanggal transaksi, serahkan ke pelanggan."],
+[35,"Tawarkan paper bag dan sebutkan harga sesuai ukuran."],
+[36,"Sebutkan total harga transaksi."],
+[37,"Kalau harga price tag berbeda dengan POS: minta maaf dan pakai harga yang lebih rendah."],
+[38,"Rekomendasikan pembayaran non-tunai. Contoh: “Pembayarannya pakai kartu atau QRIS, Kak?”"],
+[39,"Tunai: konfirmasi jumlah uang dan hitung di depan pelanggan."],
+[40,"Non-tunai: minta kartu atau QR, sebutkan nominal, lalu proses."],
+[41,"Serahkan kembalian, kartu, dan struk dengan kedua tangan."],
+[42,"Jelaskan penukaran produk secara lisan. Barang promosi dan voucher karyawan tidak dapat ditukar."],
+[43,"Salam penutup dengan sapaan daerah, nama pelanggan (jika tahu dari EAC), dan wishes. Contoh: “Terima kasih Kak Dina, semoga hikingnya lancar dan aman ya.”"],
+[44,"Tersenyum, smiling eyes, tangan kanan di dada kiri saat salam penutup."],
+[45,"Pasang POP Acrylic “Pembelanjaan Gratis jika tidak mendapatkan struk”."],
+[46,"Area kasir bersih, rapi, bebas debu dan barang pribadi."]]},
+{n:"Salam Perpisahan",e:"🤝",p:[
+[47,"Salam penutup dengan sapaan daerah, nama, dan wishes sambil smiling eyes, tangan kanan di dada kiri. Tanpa info produk: “Hati-hati di jalan”, “Sehat selalu”, “Semoga suka dengan produknya”."]]}
+];
+const Q=[
+{q:"Pelanggan baru masuk, kamu sedang melayani pelanggan lain. Apa yang dilakukan?",o:["Pura-pura tidak lihat","Cukup tersenyum ke pelanggan baru","Tinggalkan pelanggan pertama untuk menyapa"],a:1,w:"Kalau sedang melayani, cukup tersenyum. Salam lengkap dan gestur tidak perlu."},
+{q:"Pelanggan mencari sepatu yang stoknya kosong. Respons terbaik?",o:["“Maaf Kak, habis.”","Tawarkan alternatif atau opsi lain yang cocok","Suruh datang lagi minggu depan"],a:1,w:"Saat produk kosong, RA menawarkan solusi, bukan berhenti di kata habis."},
+{q:"Pelanggan sedang mencoba jaket. Apa yang sebaiknya kamu lakukan?",o:["Menunggu di kasir","Menawarkan bantuan dan memberi masukan yang relevan","Mengecek HP"],a:1,w:"Tawarkan bantuan mencoba untuk tas, jaket, sepatu, helm, jas hujan, dan tenda."},
+{q:"Pelanggan belum jadi member EAC. Langkah yang tepat?",o:["Biarkan saja","Pandu daftar lewat aplikasi atau website, tanya namanya, lalu panggil dengan nama","Minta ia daftar sendiri di rumah"],a:1,w:"Kalau mau daftar, pandu prosesnya. Kalau belum mau, jelaskan manfaat member."},
+{q:"Harga di price tag Rp199.000, tetapi di POS Rp219.000. Kasir sebaiknya...",o:["Pakai harga POS","Minta maaf dan pakai harga yang lebih rendah","Panggil pelanggan lain"],a:1,w:"Kalau ada selisih, kasir minta maaf dan memakai harga yang lebih rendah."},
+{q:"Pelanggan membayar tunai. Yang harus dilakukan kasir?",o:["Langsung masukkan laci","Konfirmasi jumlah dan hitung uang di depan pelanggan","Hitung setelah pelanggan pergi"],a:1,w:"Uang tunai dikonfirmasi dan dihitung di depan pelanggan sebelum lanjut."},
+{q:"Salam penutup yang paling sesuai standar ESS?",o:["“Makasih ya.”","“Terima kasih Kak Dina, semoga hikingnya lancar dan aman ya.”","Diam sambil melihat layar"],a:1,w:"Pakai sapaan, nama (jika tahu), wishes, smiling eyes, dan tangan kanan di dada kiri."}
+];
+
+const ALL=J.flatMap((j,i)=>j.p.map(p=>({no:p[0],t:p[1],j:i})));
+const C=["#c9ec5a","#ff9ecb","#8fd3f5","#a99bf5","#ff9a5c","#ffd23f"],ink="#1b1b1b";
+const SK=["#ffd9c7","#f6c3a4","#c98f6b","#8a5a3c"];
+const AV=[
+{s:0,h:"#1b1b1b",b:"long",t:"bangs",e:"s",m:"flat"},{s:0,h:"#ff8ac0",b:"bob",t:"bangs",e:"w",m:"smile"},
+{s:1,h:"#ff5a4f",b:"buns",t:"bangs",e:"r",m:"open"},{s:3,h:"#3b82f6",b:"long",t:"bangs",e:"r",m:"tongue"},
+{s:0,h:"#ffd23f",b:"long",t:"bangs",e:"s",m:"flat"},{s:2,h:"#ef4444",b:"afro",t:"",e:"g",m:"smile"},
+{s:1,h:"#3b82f6",b:"long",t:"bangs",e:"g",m:"open"},{s:0,h:"#a99bf5",b:"afro",t:"",e:"x",m:"flat"},
+{s:1,h:"#ff5a4f",b:"afro",t:"",e:"s",m:"pout"},{s:3,h:"#a99bf5",b:"pony",t:"cap",e:"g",m:"pout"},
+{s:0,h:"#22c55e",b:"long",t:"",e:"s",m:"open"},{s:0,h:"#ef4444",b:"buns",t:"band",e:"s",m:"flat"},
+{s:0,h:"#3b82f6",b:"",t:"spike",e:"s",m:"smile"},{s:1,h:"#ffd23f",b:"bob",t:"bangs",e:"r",m:"open"},
+{s:0,h:"#3b82f6",b:"",t:"cap",e:"w",m:"tongue"},{s:0,h:"#ffffff",b:"tuft",t:"beard",e:"g",m:"flat"},
+{s:3,h:"#22c55e",b:"afro",t:"",e:"s",m:"grin"},{s:0,h:"#1b1b1b",b:"",t:"bangs",e:"w",m:"smile"},
+{s:0,h:"#ff9ecb",b:"",t:"hat",e:"r",m:"tongue"},{s:1,h:"#1b1b1b",b:"afro",t:"band",e:"h",m:"smile"}];
+const FJ=[17,19,13,5,16,15];
+function av(i,z=56){const a=AV[i%AV.length],F=`fill="${a.h}"`;
+ const bk={bob:`<ellipse cx="50" cy="52" rx="39" ry="38" ${F}/>`,afro:`<circle cx="50" cy="46" r="41" ${F}/>`,long:`<path d="M12 98V48Q12 6 50 6Q88 6 88 48V98Z" ${F}/>`,buns:`<circle cx="20" cy="20" r="13" ${F}/><circle cx="80" cy="20" r="13" ${F}/>`,pony:`<path d="M68 28Q106 14 96 66Q92 92 74 90Q90 60 68 44Z" ${F}/>`,tuft:`<circle cx="17" cy="48" r="11" ${F}/><circle cx="83" cy="48" r="11" ${F}/>`}[a.b]||"";
+ const tp={spike:`<path d="M22 40L26 10L40 28L50 4L60 28L74 10L78 40Z" ${F}/>`,cap:`<path d="M19 44Q50 -6 81 44Z" ${F}/><path d="M19 44H94" fill="none"/>`,bangs:`<path d="M21 52Q18 16 50 16Q82 16 79 52L68 34L58 46L48 32L38 46L30 36Z" ${F}/>`,beard:`<path d="M24 62Q50 106 76 62Q50 72 24 62Z" fill="#fff"/>`,hat:`<path d="M26 42Q28 10 50 10Q72 10 74 42Z" ${F}/><path d="M8 44Q50 34 92 44Q50 54 8 44Z" ${F}/>`,band:`<path d="M18 36Q50 22 82 36V46Q50 32 18 46Z" fill="#ffd23f"/>`}[a.t]||"";
+ const E={r:`<circle cx="39" cy="52" r="6" fill="#fff"/><circle cx="61" cy="52" r="6" fill="#fff"/><circle cx="40" cy="53" r="2" fill="${ink}" stroke="none"/><circle cx="60" cy="53" r="2" fill="${ink}" stroke="none"/>`,s:`<path d="M32 52Q39 59 46 52M54 52Q61 59 68 52" fill="none"/>`,g:`<rect x="29" y="46" width="18" height="12" rx="4" fill="#8fd3f5"/><rect x="53" y="46" width="18" height="12" rx="4" fill="#8fd3f5"/><path d="M47 51H53" fill="none"/>`,w:`<circle cx="39" cy="52" r="6" fill="#fff"/><circle cx="40" cy="53" r="2" fill="${ink}" stroke="none"/><path d="M54 53Q61 46 68 53" fill="none"/>`,x:`<path d="M33 47L45 52L33 57M67 47L55 52L67 57" fill="none"/>`,h:`<path d="M39 59L31 51Q31 44 37 46L39 48L41 46Q47 44 47 51Z" fill="#ff5a4f"/><path d="M61 59L53 51Q53 44 59 46L61 48L63 46Q69 44 69 51Z" fill="#ff5a4f"/>`}[a.e];
+ const M={smile:`<path d="M38 68Q50 78 62 68" fill="none"/>`,open:`<ellipse cx="50" cy="70" rx="6" ry="7" fill="#ff5a4f"/>`,flat:`<path d="M41 70H59" fill="none"/>`,tongue:`<path d="M38 66Q50 74 62 66Z" fill="#fff"/><path d="M46 69V78Q50 82 54 78V69Z" fill="#ff5a4f"/>`,grin:`<path d="M36 66Q50 84 64 66Z" fill="#fff"/><path d="M50 68V78" fill="none"/>`,pout:`<circle cx="50" cy="70" r="4" fill="#ff5a4f"/>`}[a.m];
+ return `<svg viewBox="0 0 100 100" width="${z}" height="${z}" stroke="${ink}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${bk}<circle cx="50" cy="56" r="30" fill="${SK[a.s]}"/>${tp}${E}<circle cx="29" cy="64" r="4" fill="#ff9ecb" stroke="none"/><circle cx="71" cy="64" r="4" fill="#ff9ecb" stroke="none"/>${M}</svg>`}
+J.forEach((j,i)=>j.e=av(FJ[i],34));
+const $=s=>document.querySelector(s),app=$("#app");
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const day=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),today=()=>day(new Date());
+let S={name:"",av:0,xp:0,hearts:5,hd:"",days:[],done:{},paham:{},log:{},miss:{},qok:{}};
+try{const r=localStorage.getItem("ess2");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+if(S.hd!=today()){S.hearts=5;S.hd=today()}
+const save=()=>{try{localStorage.setItem("ess2",JSON.stringify(S))}catch(e){}};
+function streak(){let n=0,d=new Date();if(!S.days.includes(day(d)))d.setDate(d.getDate()-1);while(S.days.includes(day(d))){n++;d.setDate(d.getDate()-1)}return n}
+const LS=[];J.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
+let tab="path",L=null,shift="Pagi";
+const hero=()=>`<div class="hero"><svg viewBox="0 0 400 210" preserveAspectRatio="xMidYMax slice" stroke="${ink}" stroke-width="3" stroke-linejoin="round"><rect width="400" height="210" fill="#8fd3f5" stroke="none"/><circle cx="330" cy="50" r="22" fill="#ffd23f"/><path d="M0 150 Q80 100 170 140 T400 125 V210 H0Z" fill="#6fcf7a"/><path d="M0 185 Q120 145 240 178 T400 168 V210 H0Z" fill="#3fbf6b"/><path d="M55 172 L90 124 L125 172Z" fill="#ff9a5c"/><path d="M90 124 V172" fill="none"/><path d="M325 172 L348 118 L371 172Z" fill="#2f8f4e"/><path d="M292 174 L310 134 L328 174Z" fill="#2f8f4e"/></svg><div class="hi"><div><small>Selamat datang,</small><h1>Halo, ${esc(S.name||"RA")}!</h1></div><button class="avb" onclick="tab='me';render()">${av(S.av,56)}</button></div><div class="chips"><b class="nb chip">🔥 ${streak()}</b><b class="nb chip">⚡ ${S.xp}</b><b class="nb chip">❤ ${S.hearts}</b></div></div>`;
+function path(){const cur=LS.findIndex(l=>!S.done[l.id]);let h=hero()+"<main>",last=-1;
+ LS.forEach(l=>{if(l.ji!=last){last=l.ji;h+=`<div class="nb ban" style="background:${C[l.ji]}"><span>${J[l.ji].e}</span><div><small>Pos ${l.ji+1}</small><b>${J[l.ji].n}</b></div></div>`}
+ const st=S.done[l.id]?"done":l.id==cur?"cur":"lock",off=Math.round(Math.sin(l.id*1.1)*56);
+ h+=`<div class="nd" style="transform:translateX(${off}px)">${st=="cur"?'<i class="go">MULAI</i>':""}<button class="nb node ${st}" style="--c:${C[l.ji]}" ${st=="lock"?"disabled":""} onclick="start(${l.id})">${st=="done"?"★":st=="lock"?"🔒":av(FJ[l.ji],56)}</button></div>`});
+ return h+(cur<0?`<div class="nb card" style="background:var(--yel)"><h2>🏆 Semua pos selesai!</h2>Ulangi pos mana saja untuk latihan.</div>`:"")+"</main>"}
+function start(id){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}L={l:LS[id],s:0,a:null,xp:0};lesson()}
+function close(){L=null;$("#ov").hidden=true;render()}
+function lesson(){const l=L.l,n=l.pts.length,tot=n+(l.i==l.k-1?1:0);if(L.s>=tot)return fin();
+ let body,foot="";const q=Q[l.ji];
+ if(L.s<n){const p=l.pts[L.s];S.paham[p[0]]=1;body=`<div class="say">${av(S.av,96)}<div class="nb bub">${p[1]}</div></div>`;foot=`<button class="nb btn big" style="background:var(--grn)" onclick="L.s++;lesson()">PAHAM, LANJUT</button>`}
+ else{body=`<h3>${q.q}</h3>`+q.o.map((o,i)=>`<button class="nb opt ${L.a===null?"":i==q.a?"r":i==L.a?"w":""}" ${L.a===null?"":"disabled"} onclick="pick(${i})">${o}</button>`).join("");
+  if(L.a!==null)foot=`<div class="fb ${L.a==q.a?"r":"w"}"><b>${L.a==q.a?"Mantap! 🎉":"Belum tepat"}</b><p>${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
+ $("#ov").hidden=false;$("#ov").innerHTML=`<div class="top"><button class="x" onclick="close()">✕</button><div class="pb"><i style="width:${L.s/tot*100}%"></i></div><b>❤ ${S.hearts}</b></div><div class="bd">${body}</div><div class="ft">${foot}</div>`}
+function pick(i){const j=L.l.ji;L.a=i;if(i==Q[j].a){L.xp+=10;S.qok[j]=(S.qok[j]||0)+1}else{S.hearts=Math.max(0,S.hearts-1);S.miss[j]=(S.miss[j]||0)+1}save();lesson()}
+function fin(){const l=L.l,pr=l.id<0,xp=pr?L.xp:S.done[l.id]?5:20+L.xp;S.xp+=xp;if(!pr)S.done[l.id]=1;if(!S.days.includes(today()))S.days.push(today());save();
+ $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="close()">KEMBALI KE JALUR</button></div>`}
+const avGrid=()=>`<div class="gr">${AV.map((a,i)=>`<button class="${i==S.av?"sel":""}" onclick="setAv(${i})">${av(i,52)}</button>`).join("")}</div>`;
+function setAv(i){S.av=i;save();if(!$("#ov").hidden&&!L)onb();else render()}
+function onb(){$("#ov").hidden=false;$("#ov").innerHTML=`<div class="bd c"><h2>Selamat datang di<br>ESS Camp ⛺</h2><p>Pilih karaktermu, lalu isi namamu.</p>${avGrid()}<input class="nb inp" placeholder="Nama kamu" value="${esc(S.name)}" oninput="S.name=this.value"></div><div class="ft"><button class="nb btn big" style="background:var(--lime)" onclick="if(S.name.trim()){S.name=S.name.trim();save();$('#ov').hidden=true;render()}">MULAI PETUALANGAN</button></div>`}
+function me(){const n=["M","S","S","R","K","J","S"],d=new Date();d.setDate(d.getDate()-6);let w="";
+ for(let i=0;i<7;i++){w+=`<div class="${S.days.includes(day(d))?"on":""}">${n[d.getDay()]}<b>${S.days.includes(day(d))?"⚡":""}</b></div>`;d.setDate(d.getDate()+1)}
+ const pr=J.map((j,i)=>{const t=LS.filter(l=>l.ji==i),k=t.filter(l=>S.done[l.id]).length;return `<div>${j.e} ${j.n}<div class="pg"><i style="width:${k/t.length*100}%;background:${C[i]}"></i></div></div>`}).join("");
+ return `<main><div class="nb card" style="background:var(--yel)"><div class="row"><h2>Streak ${streak()} hari 🔥</h2><b>⚡ ${S.xp} XP</b></div><div class="wk">${w}</div></div><div class="nb card"><h3>Progres pos</h3>${pr}<small>${Object.keys(S.paham).length} dari ${ALL.length} poin sudah dipelajari</small></div><div class="nb card"><h3>Ganti karakter</h3>${avGrid()}<input class="nb inp" value="${esc(S.name)}" oninput="S.name=this.value;save()"></div><button class="nb btn big" style="background:#fff" onclick="if(confirm('Hapus semua progres?')){localStorage.removeItem('ess2');location.reload()}">Reset progres</button></main>`}
+function chk(){const k=today()+"|"+shift,D=S.log[k]||{};let ok=0,x=0;ALL.forEach(p=>{if(D[p.no]=="ok")ok++;if(D[p.no]=="x")x++});
+ let h=`<main><div class="seg">${["Pagi","Siang"].map(s=>`<button class="nb btn ${s==shift?"on":""}" onclick="shift='${s}';render()">Shift ${s}</button>`).join("")}</div><div class="nb card" style="background:var(--lime)"><small>Skor shift (N/A tidak dihitung)</small><h2 style="font-size:34px;margin:0">${ok+x?Math.round(ok/(ok+x)*100)+"%":"–"}</h2>${ok} OK · ${x} terlewat</div>`;
+ J.forEach((j,i)=>{h+=`<h3>${j.e} ${i+1}. ${j.n}</h3>`;ALL.filter(p=>p.j==i).forEach(p=>{const v=D[p.no];h+=`<div class="nb card"><div>${p.no}. ${p.t}</div><div class="st">${[["ok","OK"],["x","Terlewat"],["na","N/A"]].map(b=>`<button class="${b[0]} ${v==b[0]?"on":""}" onclick="lg(${p.no},'${b[0]}')">${b[1]}</button>`).join("")}</div></div>`})});
+ return h+"</main>"}
+function lg(n,v){const k=today()+"|"+shift;S.log[k]=S.log[k]||{};S.log[k][n]==v?delete S.log[k][n]:S.log[k][n]=v;save();const y=scrollY;render();scrollTo(0,y)}
+const ic=(b)=>`<svg viewBox="0 0 40 40" width="30" height="30" stroke="${ink}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">${b}</svg>`;
+const IC={dash:ic('<rect x="5" y="6" width="30" height="28" rx="6" fill="#8fd3f5"/><path d="M13 28V20M20 28V13M27 28V17" fill="none" stroke-width="4"/>'),
+chk:ic('<rect x="8" y="7" width="24" height="29" rx="5" fill="#fff"/><rect x="14" y="3" width="12" height="7" rx="3" fill="#ffd23f"/><path d="M14 23L19 28L27 18" fill="none" stroke="#3fbf6b" stroke-width="4"/>'),
+home:`<svg viewBox="0 0 40 40" width="36" height="36" stroke="${ink}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><path d="M4 34L20 6L36 34Z" fill="#ff9a5c"/><path d="M14 34L20 21L26 34Z" fill="#ffd23f"/></svg>`,
+prac:ic('<circle cx="20" cy="20" r="15" fill="#fff"/><circle cx="20" cy="20" r="9" fill="#ff5a4f"/><circle cx="20" cy="20" r="3.5" fill="#fff"/>')};
+const BLOB='<svg class="blob" viewBox="0 0 100 100"><path d="M50 5C62-2 76 6 76 18C90 14 100 28 92 40C102 50 98 66 86 70C88 84 74 96 62 90C56 100 44 100 38 90C26 96 12 84 14 70C2 66-2 50 8 40C0 28 10 14 24 18C24 6 38-2 50 5Z" fill="#c9ec5a" stroke="#1b1b1b" stroke-width="3"/></svg>';
+function nav(){const it=[["dash","Dasbor"],["chk","Checklist"],["path","Jalur"],["prac","Latihan"],["me","Profil"]];
+ $("nav").innerHTML=it.map(([t,l])=>t=="path"?`<button class="mid ${tab==t?"on":""}" data-t="${t}"><span class="bw">${BLOB}${IC.home}</span><b>${l}</b></button>`:`<button class="${tab==t?"on":""}" data-t="${t}">${t=="me"?av(S.av,30):IC[t]}<b>${l}</b></button>`).join("");
+ document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.t=="prac")return prac();tab=b.dataset.t;scrollTo(0,0);render()})}
+function prac(){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}
+ const sc=J.map((j,i)=>[i,(S.miss[i]||0)-(S.qok[i]||0)*.5+Math.random()]).sort((a,b)=>b[1]-a[1]);
+ L={l:{ji:sc[0][0],i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0};lesson()}
+let rng=7;
+function stats(){const d=new Date();d.setDate(d.getDate()-6);const lo=day(d),P={};ALL.forEach(p=>P[p.no]={ok:0,x:0});
+ for(const k in S.log){if(rng&&k.split("|")[0]<lo)continue;for(const n in S.log[k]){const v=S.log[k][n];if(P[n]&&(v=="ok"||v=="x"))P[n][v]++}}return P}
+function dash(){const P=stats(),J2=J.map(()=>({ok:0,x:0}));let ok=0,x=0;
+ ALL.forEach(p=>{ok+=P[p.no].ok;x+=P[p.no].x;J2[p.j].ok+=P[p.no].ok;J2[p.j].x+=P[p.no].x});
+ const sum=o=>Object.values(o).reduce((a,b)=>a+b,0),np=Object.keys(S.paham).length,mat=Math.round(np/ALL.length*100),cek=ok+x?Math.round(ok/(ok+x)*100):null,qo=sum(S.qok),qm=sum(S.miss),kz=qo+qm?Math.round(qo/(qo+qm)*100):null;
+ const m=[mat,cek,kz].filter(v=>v!==null),tot=Math.round(m.reduce((a,b)=>a+b,0)/m.length),col=v=>v===null?"#cfd6c6":v<70?"#ff5a4f":v<90?"#ffd23f":"#3fbf6b",ar='d="M20 100A80 80 0 0 1 180 100" fill="none" pathLength="100"';
+ let h=`<main><div class="row"><h2 style="font-size:26px">Dasbor ${esc(S.name||"RA")}</h2>${av(S.av,48)}</div><div class="seg">${[7,0].map(r=>`<button class="nb btn ${r==rng?"on":""}" onclick="rng=${r};render()">${r?"7 hari":"Semua"}</button>`).join("")}</div>
+ <div class="nb card" style="background:var(--lav)"><svg viewBox="0 0 200 112" width="100%"><path ${ar} stroke="${ink}" stroke-width="32"/><path ${ar} stroke="#fff" stroke-width="24"/><path ${ar} stroke="${col(tot)}" stroke-width="24" stroke-dasharray="${tot} 100"/><text x="100" y="98" text-anchor="middle" font-size="32" font-weight="900" fill="${ink}" stroke="none">${tot}%</text></svg><div style="text-align:center">Skor kesiapan ESS</div></div>
+ <div class="g3">${[["Materi",mat,"var(--lime)"],["Checklist",cek,"var(--sky)"],["Kuis",kz,"var(--pink)"]].map(a=>`<div class="nb card" style="background:${a[2]}"><small>${a[0]}</small><h2>${a[1]===null?"–":a[1]+"%"}</h2></div>`).join("")}</div>
+ <h3>⚠️ Poin yang perlu diasah</h3>`;
+ const wk=ALL.filter(p=>P[p.no].x>0).sort((a,b)=>P[b.no].x-P[a.no].x).slice(0,6);
+ h+=wk.length?wk.map(p=>`<div class="nb card"><div class="row"><b>Poin ${p.no} · ${J[p.j].n}</b><span class="nb chip" style="background:var(--red);margin:0">${P[p.no].x}× terlewat</span></div><div style="margin:6px 0">${p.t}</div><button class="nb btn" style="padding:8px 12px;background:var(--yel)" onclick="start(${LS.findIndex(l=>l.pts.some(q=>q[0]==p.no))})">Latihan pos ini</button></div>`).join(""):`<div class="nb card">Belum ada poin terlewat. Isi checklist tiap shift supaya poin lemah muncul di sini.</div>`;
+ h+=`<h3>Skor checklist per pos</h3><div class="nb card">`+J.map((j,i)=>{const a=J2[i],n=a.ok+a.x,sc=n?Math.round(a.ok/n*100):null;return `<div class="row"><span>${j.e} ${i+1}. ${j.n}</span><b>${sc===null?"–":sc+"%"}</b></div><div class="pg"><i style="width:${sc||0}%;background:${col(sc)}"></i></div>${S.miss[i]?`<small>Kuis salah ${S.miss[i]}×</small>`:""}`}).join("")+`</div><div class="nb card">📚 Belum dipelajari: <b>${ALL.length-np} poin</b><br><small>Data ini tersimpan di HP ini saja.</small></div></main>`;
+ return h}
+function render(){nav();app.innerHTML=({path,chk,me,dash}[tab])();if(!S.name)onb()}
+render();
+</script>
+</body>
+</html>
