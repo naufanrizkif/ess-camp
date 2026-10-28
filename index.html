@@ -58,6 +58,7 @@ h2,h3{margin:8px 0;font-weight:900}
 .seg{display:flex;gap:10px;margin-bottom:14px}.seg button{flex:1;padding:10px}.seg .on{background:var(--yel)}
 .st{display:flex;gap:6px;margin-top:8px}.st button{flex:1;padding:8px 0;border:3px solid var(--ink);border-radius:12px;background:#fff;font-size:13px}
 .st .ok.on{background:var(--grn)}.st .x.on{background:var(--red)}.st .na.on{background:#cfd6c6}
+.qt{display:inline-block;padding:2px 10px;border:3px solid var(--ink);border-radius:10px;background:var(--lav);font-size:12px;margin-bottom:8px}button:disabled{opacity:.5;cursor:not-allowed}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -168,6 +169,42 @@ function sync(){if(!API){sst="Alamat Apps Script belum terisi. Cek file config.j
  try{fetch(API,{method:"POST",mode:"no-cors",body:JSON.stringify({id:S.id,name:S.name,toko:S.toko,xp:S.xp,streak:streak(),materi:Object.keys(S.paham).length,qok:sum(S.qok),qmiss:sum(S.miss),p:pts(0),p7:pts(7)})}).then(()=>{sst="Terkirim pukul "+new Date().toLocaleTimeString("id-ID")}).catch(()=>{sst="Gagal terkirim. Cek koneksi internet."})}catch(e){sst="Gagal terkirim."}}
 function streak(){let n=0,d=new Date();if(!S.days.includes(day(d)))d.setDate(d.getDate()-1);while(S.days.includes(day(d))){n++;d.setDate(d.getDate()-1)}return n}
 const LS=[];J.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const QD=[
+[1,"m","Apa yang sebaiknya Rina lakukan?",["Cukup tersenyum dengan smiling eyes ke pelanggan itu","Pura-pura tidak melihat","Meninggalkan pelanggan di kasir untuk menyapa"],0,"Saat sedang melayani, cukup tersenyum. Salam lengkap menunggu sampai pelanggan sebelumnya selesai dilayani.","Rina sedang melayani pelanggan di kasir ketika seorang pelanggan baru masuk toko."],
+[3,"o","Susun urutan menyambut pelanggan yang baru masuk:",["Sapa “Selamat Datang di EIGER” sambil tersenyum","Beri waktu pelanggan melihat-lihat, jaga jarak 1 meter","Setelah sekitar 3 menit, hampiri dan tawarkan bantuan","Tanyakan kegiatan yang akan dilakukan pelanggan"],0,"Sapa dulu, beri ruang, baru hampiri, lalu gali kebutuhannya."],
+[4,"f","Langkah pertama melayani adalah menggali ____ pelanggan, seperti produk, bahan, warna, dan ukuran.",["kebutuhan","budget","identitas"],0,"Menanyakan produk, bahan, warna, dan ukuran membantu menemukan kebutuhan pelanggan."],
+[6,"m","Apa yang tepat kamu lakukan?",["Cek stok dulu, lalu informasikan dengan benar","Jawab “ada” supaya pelanggan senang","Bilang habis tanpa mengecek"],0,"Informasi stok harus benar, jadi cek dulu sebelum menjawab.","Pelanggan bertanya apakah sepatu ukuran 42 masih ada, tetapi kamu belum yakin stoknya."],
+[7,"t","Saat mengambilkan produk dari gudang, cukup bilang “sebentar ya” tanpa menyebut estimasi waktu.",null,1,"Salah. Sebutkan estimasi waktu, misalnya “sekitar 3 menit”, supaya pelanggan tahu berapa lama menunggu."],
+[8,"m","Respons terbaik?",["Tawarkan warna atau model lain yang cocok dengan kebutuhannya","Maaf Kak, habis.","Suruh pelanggan datang lagi minggu depan"],0,"Kalau produk kosong, tawarkan solusi atau alternatif, jangan berhenti di kata “habis”.","Pelanggan mencari tas warna hijau, tetapi warna itu sedang kosong."],
+[10,"f","Garansi tas dan jam tangan dijelaskan ____ tanpa menunggu pelanggan bertanya.",["spontan","setelah bayar","hanya jika diminta"],0,"Keunggulan produk dan garansi dijelaskan spontan, tanpa menunggu ditanya."],
+[11,"t","Boleh membalas chat di HP saat melayani, asal pelanggan tidak keberatan.",null,1,"Salah. Main HP, ngobrol, atau bergerombol saat melayani termasuk perilaku negatif."],
+[13,"m","Apa yang benar dilakukan?",["Kenalkan pelanggan ke rekan dan sampaikan kebutuhannya","Pergi begitu saja","Minta pelanggan mencari rekan sendiri"],0,"Saat pelanggan dialihkan, serahkan kebutuhannya dengan jelas supaya pelanggan tidak mengulang cerita.","Kamu harus pindah ke kasir, sehingga pelanggan akan dilayani rekanmu."],
+[15,"m","Langkah yang tepat?",["Tawarkan mencoba dan bantu memasangkannya","Tunggu sampai pelanggan meminta","Bilang “silakan lihat-lihat saja”"],0,"Tawarkan mencoba dan bantu, terutama untuk tas, jaket, sepatu, helm, jas hujan, dan tenda.","Pelanggan memegang sepasang sepatu trekking sambil melihat-lihat."],
+[17,"f","Fitting room harus bersih, kunci berfungsi, dan lampunya ____.",["putih terang","redup","kuning temaram"],0,"Fitting room yang terang dan rapi membuat pelanggan nyaman mencoba produk."],
+[18,"m","Apa yang kamu lakukan sebelum mengantar ke kasir?",["Minta cek ulang produk, jelaskan perawatan, lalu tawarkan produk pendamping","Langsung antar ke kasir","Bilang “itu saja?” lalu pergi"],0,"Cek ulang produk, jelaskan perawatan secara spontan, lalu tawarkan produk tambahan yang cocok.","Pelanggan sudah memilih sebuah jaket gunung."],
+[21,"t","Informasi promo sebaiknya yang relevan dengan kebutuhan pelanggan, bukan semua promo sekaligus.",null,0,"Benar. Promo yang relevan lebih mudah dipahami dan lebih meyakinkan."],
+[22,"o","Susun urutan menawarkan member EAC:",["Tanyakan apakah pelanggan sudah punya member EAC","Jika belum, pandu daftar lewat EIGER Adventure Mobile Apps atau website","Tanyakan nama pelanggan","Mulai panggil pelanggan dengan namanya"],0,"Tanya dulu, pandu pendaftaran, ambil nama, lalu pakai namanya saat melayani."],
+[24,"m","Respons yang tepat?",["Jelaskan manfaat menjadi member dengan singkat dan ramah","Memaksa sampai pelanggan mau","Langsung mengabaikan"],0,"Kalau pelanggan belum mau, jelaskan manfaatnya tanpa memaksa.","Pelanggan berkata, “Aku belum mau daftar member.”"],
+[27,"f","Saat transaksi dimulai, kasir memberi salam, kontak mata, dan memakai ____ daerah.",["sapaan","bahasa asing","singkatan"],0,"Contoh: “Silakan Kak/Pak/Bu/Bli/Mba/Bang.”"],
+[29,"m","Apa yang dikonfirmasi kasir?",["Jenis, jumlah, warna, ukuran, dan info bahwa barang diskon tidak masuk hitungan EAC","Cukup total harga","Hanya jumlah barang"],0,"Konfirmasi barang mencegah salah ambil dan menjelaskan barang diskon yang tidak masuk hitungan EAC.","Pelanggan membeli dua produk, salah satunya barang diskon."],
+[30,"t","Sebelum barang diserahkan, kasir memastikan tidak ada sensor atau tag yang masih terpasang.",null,0,"Benar. Sensor yang tertinggal bisa memicu alarm dan membuat pelanggan malu."],
+[31,"o","Susun alur pengecekan member EAC di kasir:",["Tanyakan apakah pelanggan punya member EAC","Konfirmasi nama pelanggan","Minta izin scan di HP pelanggan","Sebutkan jumlah poin dan masa expired-nya"],0,"Tanya, konfirmasi nama, scan dengan izin, lalu sampaikan poin dan masa berlakunya."],
+[34,"m","Apa yang dilakukan pada kartu garansi?",["Diberi stempel, ditulis tanggal transaksi, lalu diserahkan ke pelanggan","Dibiarkan kosong","Disimpan di toko"],0,"Garansi baru berlaku jika distempel dan diberi tanggal transaksi."],
+[35,"m","Apa yang dilakukan kasir?",["Tawarkan paper bag dan sebutkan harga sesuai ukuran","Bungkus plastik tanpa bertanya","Beri paper bag tanpa bilang apa-apa"],0,"Paper bag ditawarkan dan harganya disebutkan sesuai ukuran.","Pelanggan membeli satu jaket dan tidak membawa tas."],
+[37,"m","Kasir sebaiknya...",["Minta maaf dan pakai harga yang lebih rendah","Pakai harga di POS","Minta pelanggan menawar"],0,"Kalau ada selisih, kasir minta maaf dan memakai harga yang lebih rendah.","Price tag tertulis Rp199.000, tetapi POS menampilkan Rp219.000."],
+[38,"f","Kasir merekomendasikan pembayaran ____, misalnya kartu atau QRIS.",["non-tunai","tunai saja","transfer pribadi"],0,"Contoh ucapan: “Pembayarannya pakai kartu atau QRIS, Kak?”"],
+[39,"t","Untuk pembayaran tunai, uang dikonfirmasi dan dihitung di depan pelanggan.",null,0,"Benar. Menghitung di depan pelanggan mencegah salah paham soal jumlah uang."],
+[40,"o","Susun alur pembayaran non-tunai:",["Minta kartu atau QR pelanggan","Sebutkan nominal transaksi","Proses pembayaran","Serahkan kartu, struk, dan kembalian dengan kedua tangan"],0,"Minta kartu, sebut nominal, proses, lalu serahkan semuanya dengan kedua tangan."],
+[42,"m","Respons yang tepat?",["Jelaskan secara lisan bahwa barang promosi dan voucher karyawan tidak dapat ditukar","Bilang bisa ditukar kapan saja","Tidak perlu menjelaskan apa-apa"],0,"Aturan penukaran dijelaskan secara lisan, termasuk barang yang tidak dapat ditukar.","Pelanggan membeli barang promosi lalu bertanya, “Kalau tidak cocok, bisa ditukar?”"],
+[43,"m","Salam penutup yang paling sesuai standar ESS?",["Terima kasih Kak Dina, semoga hikingnya lancar dan aman ya.","Makasih ya.","Diam sambil melihat layar"],0,"Salam penutup memakai sapaan, nama (jika tahu dari EAC), dan wishes."],
+[45,"f","POP Acrylic di kasir bertuliskan “Pembelanjaan ____ jika tidak mendapatkan struk”.",["Gratis","Diskon 10%","Ditukar"],0,"POP Acrylic mengingatkan pelanggan untuk selalu meminta struk."],
+[46,"t","Area kasir boleh dipakai menaruh barang pribadi asal rapi.",null,1,"Salah. Area kasir harus bersih, rapi, bebas debu, dan bebas barang pribadi."],
+[47,"m","Salam perpisahan yang tepat?",["Hati-hati di jalan, Kak. Semoga hikingnya lancar!","Ada lagi yang mau dibeli?","Tidak mengatakan apa pun"],0,"Salam perpisahan berisi wishes tanpa info produk, misalnya “Hati-hati di jalan” atau “Sehat selalu”.","Pelanggan hendak pulang setelah membeli perlengkapan naik gunung."],
+[47,"o","Susun salam perpisahan yang benar:",["Tersenyum dengan smiling eyes","Tangan kanan di dada kiri","Sebut sapaan daerah dan nama pelanggan","Ucapkan wishes, misalnya “Hati-hati di jalan”"],0,"Senyum dan gestur lebih dulu, lalu sapaan, nama, dan wishes."]
+];
+const QB=QD.map(r=>({p:r[0],t:r[1],q:r[2],o:r[3],a:r[4],w:r[5],s:r[6],ji:ALL.find(x=>x.no==r[0]).j,li:LS.findIndex(l=>l.pts.some(z=>z[0]==r[0]))}));
+
 let tab="path",L=null,shift="Pagi";
 const hero=()=>`<div class="hero"><svg viewBox="0 0 400 210" preserveAspectRatio="xMidYMax slice" stroke="${ink}" stroke-width="3" stroke-linejoin="round"><rect width="400" height="210" fill="#8fd3f5" stroke="none"/><circle cx="330" cy="50" r="22" fill="#ffd23f"/><path d="M0 150 Q80 100 170 140 T400 125 V210 H0Z" fill="#6fcf7a"/><path d="M0 185 Q120 145 240 178 T400 168 V210 H0Z" fill="#3fbf6b"/><path d="M55 172 L90 124 L125 172Z" fill="#ff9a5c"/><path d="M90 124 V172" fill="none"/><path d="M325 172 L348 118 L371 172Z" fill="#2f8f4e"/><path d="M292 174 L310 134 L328 174Z" fill="#2f8f4e"/></svg><div class="hi"><div><small>Selamat datang,</small><h1>Halo, ${esc(S.name||"RA")}!</h1></div><button class="avb" onclick="tab='me';render()">${av(S.av,56)}</button></div><div class="chips"><b class="nb chip">🔥 ${streak()}</b><b class="nb chip">⚡ ${S.xp}</b><b class="nb chip">❤ ${S.hearts}</b></div></div>`;
 function path(){const cur=LS.findIndex(l=>!S.done[l.id]);let h=hero()+"<main>",last=-1;
@@ -175,15 +212,23 @@ function path(){const cur=LS.findIndex(l=>!S.done[l.id]);let h=hero()+"<main>",l
  const st=S.done[l.id]?"done":l.id==cur?"cur":"lock",off=Math.round(Math.sin(l.id*1.1)*56);
  h+=`<div class="nd" style="transform:translateX(${off}px)">${st=="cur"?'<i class="go">MULAI</i>':""}<button class="nb node ${st}" style="--c:${C[l.ji]}" ${st=="lock"?"disabled":""} onclick="start(${l.id})">${st=="done"?"★":st=="lock"?"🔒":av(FJ[l.ji],56)}</button></div>`});
  return h+(cur<0?`<div class="nb card" style="background:var(--yel)"><h2>🏆 Semua pos selesai!</h2>Ulangi pos mana saja untuk latihan.</div>`:"")+"</main>"}
-function start(id){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}L={l:LS[id],s:0,a:null,xp:0};lesson()}
+function start(id){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}L={l:LS[id],s:0,a:null,xp:0,qs:QB.filter(q=>q.li==id)};lesson()}
 function tutup(){L=null;$("#ov").hidden=true;render()}
-function lesson(){const l=L.l,n=l.pts.length,tot=n+(l.i==l.k-1?1:0);if(L.s>=tot)return fin();
- let body,foot="";const q=Q[l.ji];
+function lesson(){const l=L.l,n=l.pts.length,tot=n+L.qs.length;if(L.s>=tot)return fin();
+ let body,foot="";
  if(L.s<n){const p=l.pts[L.s];S.paham[p[0]]=1;body=`<div class="say">${av(S.av,96)}<div class="nb bub">${p[1]}</div></div>`;foot=`<button class="nb btn big" style="background:var(--grn)" onclick="L.s++;lesson()">PAHAM, LANJUT</button>`}
- else{body=`<h3>${q.q}</h3>`+q.o.map((o,i)=>`<button class="nb opt ${L.a===null?"":i==q.a?"r":i==L.a?"w":""}" ${L.a===null?"":"disabled"} onclick="pick(${i})">${o}</button>`).join("");
-  if(L.a!==null)foot=`<div class="fb ${L.a==q.a?"r":"w"}"><b>${L.a==q.a?"Mantap! 🎉":"Belum tepat"}</b><p>${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
+ else{const q=L.qs[L.s-n],tp={m:"Pilihan ganda",t:"Benar atau salah",o:"Susun urutan",f:"Lengkapi kalimat"}[q.t],done=L.a!==null,op=q.t=="t"?["Benar","Salah"]:q.o;
+  if(L.sq!==L.s){L.sq=L.s;L.o=[];L.sh=q.t=="t"?[0,1]:shuf(q.o.map((_,i)=>i))}
+  body=`<span class="qt">${q.s?"Soal cerita":tp}</span>${q.s?`<div class="nb bub" style="font-size:16px;background:var(--yel);margin-bottom:12px">📖 ${q.s}</div>`:""}<h3>${q.q}</h3>`;
+  if(q.t=="o"){body+=`<div class="nb card" style="min-height:60px">${L.o.length?L.o.map((i,k)=>`<div>${k+1}. ${q.o[i]}</div>`).join(""):"<small>Ketuk langkah sesuai urutan yang benar</small>"}</div>`+L.sh.filter(i=>!L.o.includes(i)).map(i=>`<button class="nb opt" ${done?"disabled":""} onclick="L.o.push(${i});lesson()">${q.o[i]}</button>`).join("");
+   if(done&&!L.ok)body+=`<div class="nb card" style="background:#b9f0c9"><b>Urutan yang benar:</b>${q.o.map((x,k)=>`<div>${k+1}. ${x}</div>`).join("")}</div>`;
+   if(!done)foot=`<div style="display:flex;gap:10px"><button class="nb btn big" onclick="L.o=[];lesson()">ULANG</button><button class="nb btn big" style="background:var(--grn)" ${L.o.length<q.o.length?"disabled":""} onclick="chk2()">PERIKSA</button></div>`}
+  else body+=L.sh.map(i=>`<button class="nb opt ${!done?"":i==q.a?"r":i==L.a?"w":""}" ${done?"disabled":""} onclick="pick(${i})">${op[i]}</button>`).join("");
+  if(done)foot=`<div class="fb ${L.ok?"r":"w"}"><b>${L.ok?"Mantap! 🎉":"Belum tepat"}</b><p>${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
  $("#ov").hidden=false;$("#ov").innerHTML=`<div class="top"><button class="x" onclick="tutup()">✕</button><div class="pb"><i style="width:${L.s/tot*100}%"></i></div><b>❤ ${S.hearts}</b></div><div class="bd">${body}</div><div class="ft">${foot}</div>`}
-function pick(i){const j=L.l.ji;L.a=i;if(i==Q[j].a){L.xp+=10;S.qok[j]=(S.qok[j]||0)+1}else{S.hearts=Math.max(0,S.hearts-1);S.miss[j]=(S.miss[j]||0)+1}save();lesson()}
+function rec(ok){const j=L.l.ji;if(ok){L.xp+=10;S.qok[j]=(S.qok[j]||0)+1}else{S.hearts=Math.max(0,S.hearts-1);S.miss[j]=(S.miss[j]||0)+1}L.ok=ok;save()}
+function pick(i){const q=L.qs[L.s-L.l.pts.length];L.a=i;rec(i==q.a);lesson()}
+function chk2(){L.a=1;rec(L.o.every((v,k)=>v==k));lesson()}
 function fin(){const l=L.l,pr=l.id<0,xp=pr?L.xp:S.done[l.id]?5:20+L.xp;S.xp+=xp;if(!pr)S.done[l.id]=1;if(!S.days.includes(today()))S.days.push(today());save();
  $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="tutup()">KEMBALI KE JALUR</button></div>`}
 const avGrid=()=>`<div class="gr">${AV.map((a,i)=>`<button class="${i==S.av?"sel":""}" onclick="setAv(${i})">${av(i,52)}</button>`).join("")}</div>`;
@@ -209,7 +254,7 @@ function nav(){const it=[["dash","Dasbor"],["chk","Checklist"],["path","Jalur"],
  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.t=="prac")return prac();tab=b.dataset.t;scrollTo(0,0);render()})}
 function prac(){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}
  const sc=J.map((j,i)=>[i,(S.miss[i]||0)-(S.qok[i]||0)*.5+Math.random()]).sort((a,b)=>b[1]-a[1]);
- L={l:{ji:sc[0][0],i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0};lesson()}
+ const j=sc[0][0];L={l:{ji:j,i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0,qs:shuf(QB.filter(q=>q.ji==j)).slice(0,3)};lesson()}
 let rng=7;
 function stats(r=rng){const d=new Date();d.setDate(d.getDate()-6);const lo=day(d),P={};ALL.forEach(p=>P[p.no]={ok:0,x:0});
  for(const k in S.log){if(r&&k.split("|")[0]<lo)continue;for(const n in S.log[k]){const v=S.log[k][n];if(P[n]&&(v=="ok"||v=="x"))P[n][v]++}}return P}

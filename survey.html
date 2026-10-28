@@ -581,7 +581,7 @@ async function checkPin(){
     if(sp && v === sp) ok = true;
     else if(SHEET_API_URL){ const r = await fetch(SHEET_API_URL + "?pin=" + encodeURIComponent(v) + "&src=ess"); ok = Array.isArray(JSON.parse(await r.text())); }
   }catch(e){}
-  if(ok){ try{ sessionStorage.setItem("pin", v); }catch(e){} location.href = "admin.html"; }
+  if(ok){ try{ sessionStorage.setItem("pin", v); }catch(e){} location.href = "admin.html#dash"; }
   else { document.getElementById("pinErr").textContent = "PIN salah, atau tablet tidak terhubung internet."; i.value = ""; }
 }
 

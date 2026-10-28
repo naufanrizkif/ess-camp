@@ -7,47 +7,49 @@
 <script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--p:#6a5acd;--pd:#4b3d9c;--ink:#2b2750;--mute:#8a87ab;--pink:#ff8fb1}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#c9d0e8,#dfe3f3);color:var(--ink);font:600 14px/1.4 Inter,"Segoe UI",system-ui,sans-serif;padding:16px}
-small{color:var(--mute);font-weight:500}button,input,select{font:inherit;color:inherit}
-.shell{max-width:1240px;margin:auto;background:#f6f7fc;border:2px solid #fff;border-radius:30px;padding:14px;display:grid;grid-template-columns:76px 1fr 310px;gap:16px;box-shadow:0 20px 60px #5a4fa033}
-.side{background:var(--p);border-radius:24px;display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 0}
-.side button{width:46px;height:46px;border:0;border-radius:14px;background:none;color:#d9d4ff;cursor:pointer;display:grid;place-items:center}.side button:hover,.side .on{background:var(--pd);color:#fff}.side .last{margin-top:auto}
-header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}header h1{margin:0;font-size:24px}
-.tools{display:flex;gap:8px;flex-wrap:wrap}.tools input,.tools select{border:0;background:#e9ebf6;border-radius:12px;padding:9px 12px;max-width:150px}.tools button{border:0;background:var(--p);color:#fff;border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:700}
+:root{--ink:#1b1b1b;--bg:#e7e3fb;--lime:#d4f53c;--yel:#ffd23f;--lav:#a99bf5;--pink:#ff9ecb;--org:#ff9a5c;--sky:#8fd3f5;--mute:#5b5878;--p:#7b6cf0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:700 14px/1.4 "Avenir Next","Trebuchet MS",system-ui,sans-serif;padding:14px}
+small{color:var(--mute);font-weight:600}button,input,select{font:inherit;color:inherit}
+.shell{max-width:1180px;margin:auto;background:#fff;border:3px solid var(--ink);border-radius:28px;box-shadow:6px 6px 0 var(--ink);padding:14px;display:grid;grid-template-columns:1fr 320px;grid-template-areas:"side side" "main rt";gap:16px}
+.side{grid-area:side;background:var(--ink);border-radius:20px;display:flex;align-items:center;gap:6px;padding:8px 10px;overflow-x:auto}.logo{font-weight:900;font-size:20px;color:#fff;margin-right:10px}
+.side button{display:flex;gap:6px;align-items:center;border:0;background:none;color:#fff;padding:9px 14px;border-radius:14px;cursor:pointer;font-weight:800;white-space:nowrap}.side button.on{background:#ffffff2e}.side .last{margin-left:auto}
+section{grid-area:main;min-width:0}#rt{grid-area:rt}
+header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:12px}h1{margin:0;font-size:30px;font-weight:900}
+.chips2{display:flex;gap:10px;flex-wrap:wrap}.c2{border:3px solid var(--ink);border-radius:16px;padding:8px 14px;min-width:92px;text-align:center;box-shadow:3px 3px 0 var(--ink)}.c2 b{display:block;font-size:22px}.c2 small{color:var(--ink);font-weight:700;font-size:11px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{border:3px solid var(--ink);background:#fff;border-radius:12px;padding:8px 12px;max-width:150px}.tools button{border:3px solid var(--ink);background:var(--yel);border-radius:12px;padding:8px 14px;font-weight:900;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
 .mg{display:grid;grid-template-columns:2fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
-.ov{background:linear-gradient(160deg,#7566dd,#4e41a8);color:#fff;border-radius:26px;padding:18px;grid-row:span 2}.ov small{color:#d9d4ff}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.pill{background:#ffffff26;border-radius:10px;padding:3px 10px;font-size:12px}
-.st{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;text-align:center;margin-top:6px;align-items:end}.st b{display:block;font-size:22px}.st .mid{background:#ffffff22;border-radius:20px;padding:12px 6px}.st .mid b{font-size:32px}
-.ac{border-radius:26px;padding:18px;color:#fff;position:relative;overflow:hidden;min-height:140px}.ac.p{background:linear-gradient(160deg,#7e6fe6,#6254c7)}.ac.k{background:linear-gradient(160deg,#ff9bb9,#f4668f)}
-.ac .ic{width:46px;height:46px;border-radius:14px;background:#ffffff2e;display:grid;place-items:center;font-size:22px;margin-bottom:10px}.big{font-size:30px;font-weight:800}
-.pc{background:#fff;border-radius:22px;padding:34px 16px 16px;position:relative;text-align:center;box-shadow:0 10px 30px #50469f1f}.tile{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:50px;height:50px;border-radius:16px;background:var(--p);display:grid;place-items:center;font-size:24px;box-shadow:0 8px 18px #6a5acd55}
-.pbar{height:7px;background:#e5e7f2;border-radius:6px;margin:6px 0 10px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}.tag{display:inline-block;background:#ffe3ec;color:#d6457a;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700}
-.rt{background:#fff;border-radius:24px;padding:16px;box-shadow:0 10px 30px #50469f14}.tabs{display:flex;background:#eceef8;border-radius:14px;padding:4px;margin:10px 0}.tabs button{flex:1;border:0;border-radius:11px;padding:7px;background:none;cursor:pointer;color:var(--mute)}.tabs .on{background:var(--p);color:#fff}
-.ra{border-bottom:1px solid #eceef8;padding:8px 0}.ra summary{display:flex;gap:10px;align-items:center;cursor:pointer;list-style:none}.ra summary div{flex:1;min-width:0}.ra b{display:block}
-.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none}.chip{border-radius:10px;padding:2px 9px;font-weight:800;font-size:12px}
-.dt{background:#f6f7fc;border-radius:12px;padding:10px;margin-top:8px;font-size:12px}.dt div{margin-top:5px}
-#msg{margin-bottom:10px;color:#d6457a}h3{margin:18px 0 8px;font-size:15px}
-.ov2{position:fixed;inset:0;background:linear-gradient(135deg,#c9d0e8,#dfe3f3);display:grid;place-items:center;z-index:50;padding:16px}.ov2[hidden],.shell[hidden]{display:none}
-.gc{background:#fff;border-radius:28px;padding:28px;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px #5a4fa033}.gc.wide{max-width:640px}.gc h2{margin:0 0 6px;font-size:24px}
-.gc input{width:100%;border:0;background:#e9ebf6;border-radius:14px;padding:14px;font-size:22px;text-align:center;letter-spacing:.3em;margin:14px 0}.gc>button{width:100%;border:0;background:var(--p);color:#fff;border-radius:14px;padding:14px;font-weight:800;font-size:16px;cursor:pointer}#gm{color:#d6457a;min-height:20px;margin-top:10px}
-.mcs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}.mc{border:0;border-radius:24px;padding:26px 16px;color:#fff;cursor:pointer;text-align:center}.mc span{display:block;font-size:44px}.mc b{display:block;font-size:19px;margin:8px 0 4px}.mc small{color:#ffffffcc}.mc.a{background:linear-gradient(160deg,#ff9bb9,#f4668f)}.mc.b{background:linear-gradient(160deg,#7566dd,#4e41a8)}.gc a{color:var(--mute);cursor:pointer;text-decoration:underline}
-.cm{background:#fff1f5;border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:8px 10px;margin-top:8px;font-size:12px}.cm b{display:block}.mt{max-width:420px;margin-bottom:12px}
-@media(max-width:960px){.mcs{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.side{flex-direction:row;justify-content:space-around;padding:8px}.side .last{margin:0}.mg,.three{grid-template-columns:1fr}.three{gap:40px}.ov{grid-row:auto}}
+.ov,.ac,.pc,.rt{border:3px solid var(--ink);border-radius:22px;box-shadow:4px 4px 0 var(--ink)}
+.ov{background:var(--lav);padding:16px;grid-row:span 2}.ov small{color:var(--ink)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.pill{border:2px solid var(--ink);background:#fff;border-radius:10px;padding:2px 10px;font-size:12px}
+.ac{padding:16px;position:relative;min-height:130px}.ac.p{background:var(--yel)}.ac.k{background:var(--pink)}.ac small{color:var(--ink)!important}
+.ac .ic{width:46px;height:46px;border-radius:14px;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;font-size:22px;margin-bottom:10px}.big{font-size:32px;font-weight:900}
+.pc{background:#fff;padding:34px 14px 14px;position:relative;text-align:center}.pc:nth-child(3n+1){background:#f1ffbf}.pc:nth-child(3n+2){background:#ffe5f1}.pc:nth-child(3n){background:#e3f4ff}
+.tile{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:50px;height:50px;border-radius:16px;background:var(--lime);border:3px solid var(--ink);display:grid;place-items:center;font-size:24px;box-shadow:3px 3px 0 var(--ink)}
+.pbar{height:14px;border:3px solid var(--ink);background:#fff;border-radius:9px;margin:6px 0 10px;overflow:hidden}.pbar i{display:block;height:100%}.tag{display:inline-block;border:2px solid var(--ink);background:var(--yel);border-radius:10px;padding:2px 10px;font-size:12px}
+.rt{background:#fff;padding:14px}.tabs{display:flex;gap:6px;margin:10px 0}.tabs button{flex:1;border:3px solid var(--ink);border-radius:12px;background:#fff;padding:6px;cursor:pointer;font-weight:800}.tabs .on{background:var(--lime)}
+.ra{border-bottom:2px dashed #cfc9f0;padding:8px 0}.ra summary{display:flex;gap:10px;align-items:center;cursor:pointer;list-style:none}.ra summary div{flex:1;min-width:0}.ra b{display:block}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;border:3px solid var(--ink)}.chip{border:2px solid var(--ink);border-radius:10px;padding:1px 9px;font-weight:800;font-size:12px}
+.dt{background:#f4f2ff;border:2px solid var(--ink);border-radius:12px;padding:10px;margin-top:8px;font-size:12px}.dt div{margin-top:5px}
+.cm{background:#fff1f5;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);border-radius:12px;padding:8px 10px;margin-top:8px;font-size:12px}.cm b{display:block}
+#msg{margin-bottom:10px;color:#c8452d}h3{margin:18px 0 8px;font-size:15px}
+.ov2{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:50;padding:16px}.ov2[hidden],.shell[hidden]{display:none}
+.gc{background:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);border-radius:28px;padding:28px;width:100%;max-width:380px;text-align:center}.gc.wide{max-width:640px}.gc h2{margin:0 0 6px;font-size:26px}
+.gc input{width:100%;border:3px solid var(--ink);border-radius:14px;padding:14px;font-size:22px;text-align:center;letter-spacing:.3em;margin:14px 0}.gc>button{width:100%;border:3px solid var(--ink);background:var(--lime);box-shadow:3px 3px 0 var(--ink);border-radius:14px;padding:14px;font-weight:900;font-size:16px;cursor:pointer}#gm{color:#c8452d;min-height:20px;margin-top:10px}
+.mcs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}.mc{border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:24px;padding:26px 16px;cursor:pointer;text-align:center}.mc span{display:block;font-size:44px}.mc b{display:block;font-size:19px;margin:8px 0 4px}.mc small{color:var(--ink)}.mc.a{background:var(--pink)}.mc.b{background:var(--lime)}.gc a{color:var(--mute);cursor:pointer;text-decoration:underline}
+@media(max-width:960px){.shell{grid-template-columns:1fr;grid-template-areas:"side" "main" "rt"}.mg,.three,.mcs{grid-template-columns:1fr}.three{gap:40px}.ov{grid-row:auto}}
 </style>
 </head>
 <body>
 <div class="shell" id="sh" hidden>
 <aside class="side" id="sd"></aside>
 <section>
-<header><div><small id="sub">Primary</small><h1>Dashboard</h1></div>
+<header><div><h1 id="hi">Selamat datang!</h1><small id="sub">Dashboard</small></div><div class="chips2" id="ch"></div></header>
 <div class="tools"><input id="q" placeholder="Cari RA" oninput="q=this.value.toLowerCase();render()">
 <select class="es" id="tk" onchange="tk=this.value;render()"><option value="">Semua toko</option></select>
 <select class="es" onchange="rng=+this.value;render()"><option value="7">7 hari</option><option value="0">Semua waktu</option></select>
 <select class="sv" onchange="srng=+this.value;render()"><option value="7">7 hari</option><option value="30">30 hari</option><option value="0">Semua waktu</option></select>
 <input class="sv" type="date" id="df" onchange="render()"><input class="sv" type="date" id="dt" onchange="render()">
-<button class="sv" onclick="exportX()">Export Excel</button></div></header>
-<div class="tabs mt"><button id="b-ess" onclick="setMode('ess')">ESS Camp</button><button id="b-svy" onclick="setMode('svy')">Service Excellence</button></div>
+<button class="sv" onclick="exportX()">Export Excel</button></div>
 <div id="msg"></div><div id="out"></div>
 </section>
 <aside id="rt"></aside>
@@ -55,14 +57,15 @@ header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-
 <div class="ov2" id="gate"><div class="gc"><h2>Admin ESS</h2><small>Masukkan PIN untuk melanjutkan</small><input id="gp" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button onclick="login()">Masuk</button><div id="gm"></div></div></div>
 <div class="ov2" id="menu" hidden><div class="gc wide"><h2>Pilih menu</h2><div class="mcs"><button class="mc a" onclick="location.href='survey.html'"><span>⭐</span><b>Mulai Penilaian</b><small>Survey Service Excellence untuk pelanggan</small></button><button class="mc b" onclick="openDash()"><span>📊</span><b>Buka Dashboard</b><small>ESS Camp dan Service Excellence</small></button></div><a onclick="sessionStorage.clear();location.reload()">Kunci</a></div></div>
 <script>
-const API=window.ESS_API||"";let D=[],J=[],ALL=[],rng=7,tk="",q="",tb=0;
+const API=window.ESS_API||"";const chips=l=>l.map(([t,v,c])=>`<div class="c2" style="background:var(--${c})"><b>${v}</b><small>${t}</small></div>`).join("");let D=[],J=[],ALL=[],rng=7,tk="",q="",tb=0;
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const col=v=>v===null?"#cfd2e6":v<70?"#ff6b81":v<90?"#f5b942":"#22c55e";
 const sc=o=>{let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Math.round(a/(a+b)*100):null};
-const ago=t=>{const m=(Date.now()-new Date(t))/6e4;return m<60?Math.round(m)+" mnt lalu":m<1440?Math.round(m/60)+" jam lalu":Math.round(m/1440)+" hari lalu"};
+const ago=t=>{const m=(Date.now()-pw(t))/6e4;return m<60?Math.round(m)+" mnt lalu":m<1440?Math.round(m/60)+" jam lalu":Math.round(m/1440)+" hari lalu"};
 const si=d=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const go=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
-$("#sd").innerHTML=[["showMenu()",'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',"b0"],["setMode('ess')",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',"b1"],["setMode('svy')",'<path d="M12 3l2.8 5.9 6.2.8-4.6 4.3 1.2 6.3L12 17.3 6.4 20.3l1.2-6.3L3 9.7l6.2-.8z"/>',"b2"]].map(x=>`<button id="${x[2]}" title="${x[2]=="b0"?"Menu":""}" onclick="${x[0]}">${si(x[1])}</button>`).join("")+`<button class="last" title="Kunci" onclick="sessionStorage.clear();location.reload()">${si('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>')}</button>`;
+$("#sd").innerHTML=`<span class="logo">ESS</span>`+[["showMenu()","b0","Menu",'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>'],["setMode('ess')","b1","ESS Camp",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],["setMode('svy')","b2","Service Excellence",'<path d="M12 3l2.8 5.9 6.2.8-4.6 4.3 1.2 6.3L12 17.3 6.4 20.3l1.2-6.3L3 9.7l6.2-.8z"/>']].map(x=>`<button id="${x[1]}" onclick="${x[0]}">${si(x[3])}<span>${x[2]}</span></button>`).join("")+`<button class="last" onclick="sessionStorage.clear();location.reload()">${si('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>')}<span>Kunci</span></button>`;
+function pw(t){if(typeof t=="string"){const m=t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?/);if(m)return new Date(+m[3],m[2]-1,+m[1],+m[4],+m[5],+(m[6]||0))}return new Date(t)}
 let SD=[],mode="ess",srng=7;
 async function getJ(){if(J.length)return;const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
 async function fsrc(pin,src){const r=await fetch(API+"?pin="+encodeURIComponent(pin)+"&src="+src);return JSON.parse(await r.text())}
@@ -71,37 +74,38 @@ async function login(){const m=$("#gm"),pin=$("#gp").value;m.textContent="Memeri
   try{sessionStorage.setItem("pin",pin)}catch(e){}showMenu()}
  catch(e){m.textContent=API?"Gagal terhubung ke Apps Script. Periksa URL di config.js, akses (Anyone), dan versi deploy terbaru.":"config.js belum berisi URL Apps Script."}}
 function showMenu(){$("#gate").hidden=true;$("#sh").hidden=true;$("#menu").hidden=false}
-async function openDash(){$("#menu").hidden=true;$("#sh").hidden=false;$("#msg").textContent="Memuat…";
+async function openDash(){$("#menu").hidden=true;$("#sh").hidden=false;$("#msg").textContent="Memuat…";{const h=new Date().getHours();$("#hi").textContent="Selamat "+(h<11?"pagi":h<15?"siang":h<18?"sore":"malam")+"!"}
  try{const pin=sessionStorage.getItem("pin")||"";await getJ();const[x,y]=await Promise.all([fsrc(pin,"ess"),fsrc(pin,"survey")]);D=Array.isArray(x)?x:[];SD=Array.isArray(y)?y:[];$("#msg").textContent="";
   const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");setMode(mode)}
  catch(e){$("#msg").textContent="Gagal memuat data. Pastikan Apps Script sudah dideploy ulang dengan versi terbaru."}}
 function setMode(m){mode=m;if($("#sh").hidden)return;document.querySelectorAll(".es").forEach(e=>e.hidden=m!="ess");document.querySelectorAll(".sv").forEach(e=>e.hidden=m!="svy");
- ["ess","svy"].forEach(k=>$("#b-"+k).classList.toggle("on",k==m));$("#b1").classList.toggle("on",m=="ess");$("#b2").classList.toggle("on",m=="svy");$("#sub").textContent=m=="ess"?"ESS Camp":"Service Excellence";render()}
+ $("#b1").classList.toggle("on",m=="ess");$("#b2").classList.toggle("on",m=="svy");$("#sub").textContent=m=="ess"?"ESS Camp":"Service Excellence";render()}
 function render(){mode=="ess"?draw():drawS()}
-function chart2(v,lb,mx,fm){const n=v.length,xs=i=>n>1?50+i*500/(n-1):300,ys=x=>135-(x||0)/mx*115,em=t=>`<svg viewBox="0 0 600 180" width="100%"><text x="300" y="90" text-anchor="middle" fill="#d9d4ff">${t}</text></svg>`;let low=-1;v.forEach((x,i)=>{if(x!==null&&(low<0||x<v[low]))low=i});
+function chart2(v,lb,mx,fm){const n=v.length,xs=i=>n>1?50+i*500/(n-1):300,ys=x=>135-(x||0)/mx*115,em=t=>`<svg viewBox="0 0 600 180" width="100%"><text x="300" y="90" text-anchor="middle" fill="#1b1b1b">${t}</text></svg>`;let low=-1;v.forEach((x,i)=>{if(x!==null&&(low<0||x<v[low]))low=i});
  if(low<0)return em("Belum ada data");if(n<2)return em("Butuh data minimal 2 hari");
  let d="M"+xs(0)+" "+ys(v[0]);for(let i=1;i<n;i++){const m=(xs(i-1)+xs(i))/2;d+=`C${m} ${ys(v[i-1])} ${m} ${ys(v[i])} ${xs(i)} ${ys(v[i])}`}
  const lx=xs(low),ly=ys(v[low]);
- return `<svg viewBox="0 0 600 180" width="100%"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="${lx-16}" y="22" width="32" height="130" rx="16" fill="#fff" opacity=".14"/><path d="${d}L${xs(n-1)} 152L${xs(0)} 152Z" fill="url(#g)"/><path d="${d}" fill="none" stroke="#ff8fb1" stroke-width="4"/><circle cx="${lx}" cy="${ly}" r="8" fill="#ff8fb1" stroke="#fff" stroke-width="3"/><rect x="${lx-38}" y="${ly-56}" width="76" height="38" rx="12" fill="#fff"/><text x="${lx}" y="${ly-40}" text-anchor="middle" font-size="11" fill="#8a87ab">${lb[low]}</text><text x="${lx}" y="${ly-25}" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2750">${fm(v[low])}</text>${lb.map((l,i)=>n<=8||i%2==0?`${i==low?`<rect x="${xs(i)-24}" y="158" width="48" height="20" rx="10" fill="#fff"/>`:""}<text x="${xs(i)}" y="172" text-anchor="middle" font-size="12" fill="${i==low?"#4b3d9c":"#d9d4ff"}" font-weight="700">${l}</text>`:"").join("")}</svg>`}
+ return `<svg viewBox="0 0 600 180" width="100%"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1b1b" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="${lx-16}" y="22" width="32" height="130" rx="16" fill="#fff" opacity=".14"/><path d="${d}L${xs(n-1)} 152L${xs(0)} 152Z" fill="url(#g)"/><path d="${d}" fill="none" stroke="#1b1b1b" stroke-width="4"/><circle cx="${lx}" cy="${ly}" r="8" fill="#ffd23f" stroke="#1b1b1b" stroke-width="3"/><rect x="${lx-38}" y="${ly-56}" width="76" height="38" rx="12" fill="#fff" stroke="#1b1b1b" stroke-width="2.5"/><text x="${lx}" y="${ly-40}" text-anchor="middle" font-size="11" fill="#5b5878">${lb[low]}</text><text x="${lx}" y="${ly-25}" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2750">${fm(v[low])}</text>${lb.map((l,i)=>n<=8||i%2==0?`${i==low?`<rect x="${xs(i)-24}" y="158" width="48" height="20" rx="10" fill="#fff"/>`:""}<text x="${xs(i)}" y="172" text-anchor="middle" font-size="12" fill="${i==low?"#4b3d9c":"#1b1b1b"}" font-weight="700">${l}</text>`:"").join("")}</svg>`}
 const TL={salam:"Sapaan",pengetahuan:"Pengetahuan produk",rekomendasi:"Rekomendasi",coba:"Tawaran coba produk",penampilan:"Penampilan"};
 function sflt(){const f=$("#df").value,t=$("#dt").value;let lo=null,hi=null;if(f||t){lo=f?new Date(f+"T00:00:00"):null;hi=t?new Date(t+"T23:59:59"):null}else if(srng)lo=new Date(Date.now()-srng*864e5);
- return SD.filter(e=>{const w=new Date(e.waktu);return(!lo||w>=lo)&&(!hi||w<=hi)&&(!q||String(e.ra).toLowerCase().includes(q))}).map(e=>({...e,rating:+e.rating,tags:Array.isArray(e.tags)?e.tags:[]}))}
+ return SD.filter(e=>{const w=pw(e.waktu);return(!lo||w>=lo)&&(!hi||w<=hi)&&(!q||String(e.ra).toLowerCase().includes(q))}).map(e=>({...e,rating:+e.rating,tags:Array.isArray(e.tags)?e.tags:[]}))}
 function drawS(){const E=sflt(),n=E.length,avg=n?E.reduce((x,e)=>x+e.rating,0)/n:null,p5=n?Math.round(E.filter(e=>e.rating==5).length/n*100):null,by={};
- E.forEach(e=>{const k=new Date(e.waktu).toLocaleDateString("sv-SE");(by[k]=by[k]||[]).push(e.rating)});
+ E.forEach(e=>{const k=pw(e.waktu).toLocaleDateString("sv-SE");(by[k]=by[k]||[]).push(e.rating)});
  const days=Object.keys(by).sort().slice(-14),vals=days.map(k=>by[k].reduce((x,y)=>x+y,0)/by[k].length),labs=days.map(k=>k.slice(8)+"/"+k.slice(5,7));
  const low=E.filter(e=>e.rating<=2).length,txt=E.filter(e=>e.rating<5&&e.komentar),R={};E.forEach(e=>{(R[e.ra]=R[e.ra]||[]).push(e.rating)});
  const rs=Object.entries(R).map(([k,v])=>({k,c:v.length,a:v.reduce((x,y)=>x+y,0)/v.length})).sort((x,y)=>x.a-y.a),tg={p:{},n:{}};
  E.forEach(e=>e.tags.forEach(id=>{const b=e.rating>=4?tg.p:tg.n;b[id]=(b[id]||0)+1}));
  const top=o=>Object.entries(o).sort((x,y)=>y[1]-x[1]).slice(0,3).map(([id,c])=>`${TL[id]||id} (${c})`).join(", ")||"–",c5=v=>v<3?"#ff6b81":v<4?"#f5b942":"#22c55e",custom=$("#df").value||$("#dt").value;
- $("#out").innerHTML=`<div class="mg"><div class="ov"><div class="row"><b>Overview rating harian</b><span class="pill">${custom?"Rentang tanggal":srng?srng+" hari":"Semua waktu"}</span></div>${chart2(vals,labs,5,v=>v.toFixed(1)+"★")}<div class="st"><div><small>Penilaian</small><b>${n}</b></div><div class="mid"><small>Rata-rata rating</small><b>${avg===null?"–":avg.toFixed(1)}</b></div><div><small>Bintang 5</small><b>${p5===null?"–":p5+"%"}</b></div></div></div>
+ $("#ch").innerHTML=chips([["Penilaian",n,"yel"],["Rata-rata rating",avg===null?"–":avg.toFixed(1),"lav"],["Bintang 5",p5===null?"–":p5+"%","org"],["Rating 1–2",low,"pink"]]);
+ $("#out").innerHTML=`<div class="mg"><div class="ov"><div class="row"><b>Overview rating harian</b><span class="pill">${custom?"Rentang tanggal":srng?srng+" hari":"Semua waktu"}</span></div>${chart2(vals,labs,5,v=>v.toFixed(1)+"★")}</div>
  <div class="ac p"><div class="ic">💬</div><b>Masukan Tertulis</b><div class="big">${txt.length}</div></div>
  <div class="ac k"><div class="ic">⚠️</div><b>Rating 1–2</b><div class="big">${low}</div><small style="color:#fff9">perlu ditindaklanjuti</small></div></div>
  <div class="three">${rs.length?rs.map(r=>`<div class="pc"><div class="tile">⭐</div><b>${esc(r.k)}</b><div class="row"><small>Rata-rata</small><b>${r.a.toFixed(1)}</b></div><div class="pbar"><i style="width:${r.a/5*100}%;background:${c5(r.a)}"></i></div><span class="tag">${r.c} penilaian</span></div>`).join(""):`<div class="rt">Belum ada penilaian pada rentang ini.</div>`}</div>`;
- $("#rt").innerHTML=`<div class="rt"><div class="row"><b>Masukan terbaru</b><small>${txt.length} pesan</small></div>${txt.sort((x,y)=>new Date(y.waktu)-new Date(x.waktu)).slice(0,8).map(e=>`<div class="cm"><b>${"★".repeat(e.rating)}${"☆".repeat(5-e.rating)} · ${esc(e.ra)}</b>${esc(e.komentar)} <small>${ago(e.waktu)}</small></div>`).join("")||"<small>Belum ada masukan tertulis.</small>"}<h3>Sering dipuji</h3><small>${top(tg.p)}</small><h3>Perlu diperbaiki</h3><small>${top(tg.n)}</small></div>`}
+ $("#rt").innerHTML=`<div class="rt"><div class="row"><b>Masukan terbaru</b><small>${txt.length} pesan</small></div>${txt.sort((x,y)=>pw(y.waktu)-pw(x.waktu)).slice(0,8).map(e=>`<div class="cm"><b>${"★".repeat(e.rating)}${"☆".repeat(5-e.rating)} · ${esc(e.ra)}</b>${esc(e.komentar)} <small>${ago(e.waktu)}</small></div>`).join("")||"<small>Belum ada masukan tertulis.</small>"}<h3>Sering dipuji</h3><small>${top(tg.p)}</small><h3>Perlu diperbaiki</h3><small>${top(tg.n)}</small></div>`}
 function exportX(){const E=sflt();if(!E.length){alert("Belum ada data untuk di-export.");return}
- const ws=XLSX.utils.json_to_sheet(E.sort((x,y)=>new Date(x.waktu)-new Date(y.waktu)).map(e=>({"Tanggal & Waktu":new Date(e.waktu).toLocaleString("id-ID"),"Cabang":e.cabang,"Retail Assistant":e.ra,"Rating":e.rating,"Kesan yang Dipilih":e.tags.map(i=>TL[i]||i).join("; "),"Saran / Masukan":e.komentar||""}))),wb=XLSX.utils.book_new();
+ const ws=XLSX.utils.json_to_sheet(E.sort((x,y)=>pw(x.waktu)-pw(y.waktu)).map(e=>({"Tanggal & Waktu":pw(e.waktu).toLocaleString("id-ID"),"Cabang":e.cabang,"Retail Assistant":e.ra,"Rating":e.rating,"Kesan yang Dipilih":e.tags.map(i=>TL[i]||i).join("; "),"Saran / Masukan":e.komentar||""}))),wb=XLSX.utils.book_new();
  XLSX.utils.book_append_sheet(wb,ws,"Rekap Survey");XLSX.writeFile(wb,`rekap-survey-service-${new Date().toISOString().slice(0,10)}.xlsx`)}
-try{if(sessionStorage.getItem("pin"))showMenu()}catch(e){}
+try{if(sessionStorage.getItem("pin")){$("#gate").hidden=true;location.hash=="#dash"?openDash():showMenu()}}catch(e){}
 function draw(){
  const R=D.filter(r=>(!tk||r.toko==tk)&&(!q||r.name.toLowerCase().includes(q))).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}});
  const jo=J.map(()=>[0,0]),agg={},wc=J.map(()=>0);
@@ -111,7 +115,8 @@ function draw(){
  const idle=R.filter(r=>Date.now()-new Date(r.t)>3*864e5).length,need=ok.filter(r=>r.s<70).length,miss=Object.values(agg).reduce((a,b)=>a+b,0),tot=ALL.filter(Boolean).length;
  const chart=chart2(js,js.map((v,i)=>"Pos "+(i+1)),100,v=>v+"%");
  const ord=J.map((j,i)=>i).sort((a,b)=>(js[a]??101)-(js[b]??101)).slice(0,3);
- $("#out").innerHTML=`<div class="mg" id="ov"><div class="ov"><div class="row"><b>Overview skor checklist per pos</b><span class="pill">${rng?"7 hari":"Semua waktu"}</span></div>${chart}<div class="st"><div><small>RA terdaftar</small><b>${R.length}</b></div><div class="mid"><small>Rata-rata checklist</small><b>${avg===null?"–":avg+"%"}</b></div><div><small>Tidak aktif &gt;3 hari</small><b>${idle}</b></div></div></div>
+ $("#ch").innerHTML=chips([["RA terdaftar",R.length,"yel"],["Rata-rata checklist",avg===null?"–":avg+"%","lav"],["Tidak aktif >3 hari",idle,"org"],["Poin terlewat",miss,"pink"]]);
+ $("#out").innerHTML=`<div class="mg" id="ov"><div class="ov"><div class="row"><b>Overview skor checklist per pos</b><span class="pill">${rng?"7 hari":"Semua waktu"}</span></div>${chart}</div>
  <div class="ac p"><div class="ic">⚠️</div><b>Poin Terlewat</b><div class="big">${miss}×</div></div>
  <div class="ac k"><div class="ic">👥</div><b>Perlu Pendampingan</b><div class="big">${need} RA</div><small style="color:#fff9">skor di bawah 70%</small></div></div>
  <div class="three" id="pos">${ord.map(i=>`<div class="pc"><div class="tile">${J[i].e}</div><b>${i+1}. ${esc(J[i].n)}</b><div class="row"><small>Skor</small><b>${js[i]===null?"–":js[i]+"%"}</b></div><div class="pbar"><i style="width:${js[i]||0}%;background:${col(js[i])}"></i></div><span class="tag">${wc[i]} poin lemah</span></div>`).join("")}</div>`;
