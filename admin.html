@@ -5,50 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dasbor Supervisor ESS</title>
 <script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--ink:#1b1b1b;--bg:#dfe9cf}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:700 15px/1.4 "Avenir Next","Trebuchet MS",system-ui,sans-serif;padding:16px}
-main{max-width:760px;margin:auto}h1{margin:0 0 12px;font-weight:900}h3{margin:18px 0 8px}
-.nb{border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);background:#fff;padding:12px;margin-bottom:12px}
-input,select,button{font:inherit;border:3px solid var(--ink);border-radius:12px;padding:9px 12px;background:#fff}button{cursor:pointer;background:#ffd23f;font-weight:900}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.g .nb{text-align:center;margin:0}.g b{font-size:26px;display:block}
-.pg{height:12px;border:3px solid var(--ink);border-radius:9px;background:#fff;overflow:hidden;margin:6px 0}.pg i{display:block;height:100%}
-.row{display:flex;justify-content:space-between;gap:8px;align-items:center}summary{cursor:pointer;list-style:none}small{color:#4a5a50}
-.tag{border:2px solid var(--ink);border-radius:10px;padding:1px 8px;background:#ff5a4f;white-space:nowrap}
+:root{--p:#6a5acd;--pd:#4b3d9c;--ink:#2b2750;--mute:#8a87ab;--pink:#ff8fb1}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#c9d0e8,#dfe3f3);color:var(--ink);font:600 14px/1.4 Inter,"Segoe UI",system-ui,sans-serif;padding:16px}
+small{color:var(--mute);font-weight:500}button,input,select{font:inherit;color:inherit}
+.shell{max-width:1240px;margin:auto;background:#f6f7fc;border:2px solid #fff;border-radius:30px;padding:14px;display:grid;grid-template-columns:76px 1fr 310px;gap:16px;box-shadow:0 20px 60px #5a4fa033}
+.side{background:var(--p);border-radius:24px;display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 0}
+.side button{width:46px;height:46px;border:0;border-radius:14px;background:none;color:#d9d4ff;cursor:pointer;display:grid;place-items:center}.side button:hover,.side .on{background:var(--pd);color:#fff}.side .last{margin-top:auto}
+header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}header h1{margin:0;font-size:24px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}.tools input,.tools select{border:0;background:#e9ebf6;border-radius:12px;padding:9px 12px;max-width:150px}.tools button{border:0;background:var(--p);color:#fff;border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:700}
+.mg{display:grid;grid-template-columns:2fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.ov{background:linear-gradient(160deg,#7566dd,#4e41a8);color:#fff;border-radius:26px;padding:18px;grid-row:span 2}.ov small{color:#d9d4ff}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.pill{background:#ffffff26;border-radius:10px;padding:3px 10px;font-size:12px}
+.st{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;text-align:center;margin-top:6px;align-items:end}.st b{display:block;font-size:22px}.st .mid{background:#ffffff22;border-radius:20px;padding:12px 6px}.st .mid b{font-size:32px}
+.ac{border-radius:26px;padding:18px;color:#fff;position:relative;overflow:hidden;min-height:140px}.ac.p{background:linear-gradient(160deg,#7e6fe6,#6254c7)}.ac.k{background:linear-gradient(160deg,#ff9bb9,#f4668f)}
+.ac .ic{width:46px;height:46px;border-radius:14px;background:#ffffff2e;display:grid;place-items:center;font-size:22px;margin-bottom:10px}.big{font-size:30px;font-weight:800}
+.pc{background:#fff;border-radius:22px;padding:34px 16px 16px;position:relative;text-align:center;box-shadow:0 10px 30px #50469f1f}.tile{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:50px;height:50px;border-radius:16px;background:var(--p);display:grid;place-items:center;font-size:24px;box-shadow:0 8px 18px #6a5acd55}
+.pbar{height:7px;background:#e5e7f2;border-radius:6px;margin:6px 0 10px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}.tag{display:inline-block;background:#ffe3ec;color:#d6457a;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700}
+.rt{background:#fff;border-radius:24px;padding:16px;box-shadow:0 10px 30px #50469f14}.tabs{display:flex;background:#eceef8;border-radius:14px;padding:4px;margin:10px 0}.tabs button{flex:1;border:0;border-radius:11px;padding:7px;background:none;cursor:pointer;color:var(--mute)}.tabs .on{background:var(--p);color:#fff}
+.ra{border-bottom:1px solid #eceef8;padding:8px 0}.ra summary{display:flex;gap:10px;align-items:center;cursor:pointer;list-style:none}.ra summary div{flex:1;min-width:0}.ra b{display:block}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none}.chip{border-radius:10px;padding:2px 9px;font-weight:800;font-size:12px}
+.dt{background:#f6f7fc;border-radius:12px;padding:10px;margin-top:8px;font-size:12px}.dt div{margin-top:5px}
+#msg{margin-bottom:10px;color:#d6457a}h3{margin:18px 0 8px;font-size:15px}
+.ov2{position:fixed;inset:0;background:linear-gradient(135deg,#c9d0e8,#dfe3f3);display:grid;place-items:center;z-index:50;padding:16px}.ov2[hidden],.shell[hidden]{display:none}
+.gc{background:#fff;border-radius:28px;padding:28px;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px #5a4fa033}.gc.wide{max-width:640px}.gc h2{margin:0 0 6px;font-size:24px}
+.gc input{width:100%;border:0;background:#e9ebf6;border-radius:14px;padding:14px;font-size:22px;text-align:center;letter-spacing:.3em;margin:14px 0}.gc>button{width:100%;border:0;background:var(--p);color:#fff;border-radius:14px;padding:14px;font-weight:800;font-size:16px;cursor:pointer}#gm{color:#d6457a;min-height:20px;margin-top:10px}
+.mcs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}.mc{border:0;border-radius:24px;padding:26px 16px;color:#fff;cursor:pointer;text-align:center}.mc span{display:block;font-size:44px}.mc b{display:block;font-size:19px;margin:8px 0 4px}.mc small{color:#ffffffcc}.mc.a{background:linear-gradient(160deg,#ff9bb9,#f4668f)}.mc.b{background:linear-gradient(160deg,#7566dd,#4e41a8)}.gc a{color:var(--mute);cursor:pointer;text-decoration:underline}
+.cm{background:#fff1f5;border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:8px 10px;margin-top:8px;font-size:12px}.cm b{display:block}.mt{max-width:420px;margin-bottom:12px}
+@media(max-width:960px){.mcs{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.side{flex-direction:row;justify-content:space-around;padding:8px}.side .last{margin:0}.mg,.three{grid-template-columns:1fr}.three{gap:40px}.ov{grid-row:auto}}
 </style>
 </head>
-<body><main>
-<h1>Dasbor Supervisor ESS</h1>
-<div class="bar"><input id="pin" type="password" placeholder="PIN supervisor"><button onclick="load()">Buka</button>
-<select id="tk" onchange="tk=this.value;draw()"><option value="">Semua toko</option></select>
-<select onchange="rng=+this.value;draw()"><option value="7">7 hari terakhir</option><option value="0">Semua waktu</option></select></div>
+<body>
+<div class="shell" id="sh" hidden>
+<aside class="side" id="sd"></aside>
+<section>
+<header><div><small id="sub">Primary</small><h1>Dashboard</h1></div>
+<div class="tools"><input id="q" placeholder="Cari RA" oninput="q=this.value.toLowerCase();render()">
+<select class="es" id="tk" onchange="tk=this.value;render()"><option value="">Semua toko</option></select>
+<select class="es" onchange="rng=+this.value;render()"><option value="7">7 hari</option><option value="0">Semua waktu</option></select>
+<select class="sv" onchange="srng=+this.value;render()"><option value="7">7 hari</option><option value="30">30 hari</option><option value="0">Semua waktu</option></select>
+<input class="sv" type="date" id="df" onchange="render()"><input class="sv" type="date" id="dt" onchange="render()">
+<button class="sv" onclick="exportX()">Export Excel</button></div></header>
+<div class="tabs mt"><button id="b-ess" onclick="setMode('ess')">ESS Camp</button><button id="b-svy" onclick="setMode('svy')">Service Excellence</button></div>
 <div id="msg"></div><div id="out"></div>
-</main>
+</section>
+<aside id="rt"></aside>
+</div>
+<div class="ov2" id="gate"><div class="gc"><h2>Admin ESS</h2><small>Masukkan PIN untuk melanjutkan</small><input id="gp" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button onclick="login()">Masuk</button><div id="gm"></div></div></div>
+<div class="ov2" id="menu" hidden><div class="gc wide"><h2>Pilih menu</h2><div class="mcs"><button class="mc a" onclick="location.href='survey.html'"><span>⭐</span><b>Mulai Penilaian</b><small>Survey Service Excellence untuk pelanggan</small></button><button class="mc b" onclick="openDash()"><span>📊</span><b>Buka Dashboard</b><small>ESS Camp dan Service Excellence</small></button></div><a onclick="sessionStorage.clear();location.reload()">Kunci</a></div></div>
 <script>
-const API=window.ESS_API||"";let D=[],J=[],ALL=[],rng=7,tk="";
+const API=window.ESS_API||"";let D=[],J=[],ALL=[],rng=7,tk="",q="",tb=0;
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const col=v=>v===null?"#cfd6c6":v<70?"#ff5a4f":v<90?"#ffd23f":"#3fbf6b";
-function sc(o){let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Math.round(a/(a+b)*100):null}
-async function load(){const m=$("#msg");m.textContent="Memuat…";
- try{if(!API)throw 0;
-  if(!J.length){const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
-  const r=await fetch(API+"?pin="+encodeURIComponent($("#pin").value)),tx=await r.text();
-  try{D=JSON.parse(tx)}catch(e){m.textContent="Apps Script tidak mengembalikan data. Biasanya Who has access belum diatur ke Anyone, atau URL bukan yang berakhiran /exec.";return}
-  m.textContent=D.length?"":"Belum ada data, atau PIN salah.";
-  const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");draw()
- }catch(e){m.textContent=API?"Gagal terhubung ke Apps Script. Periksa URL di config.js dan pengaturan akses (Anyone).":"config.js belum berisi URL Apps Script."}}
+const col=v=>v===null?"#cfd2e6":v<70?"#ff6b81":v<90?"#f5b942":"#22c55e";
+const sc=o=>{let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Math.round(a/(a+b)*100):null};
+const ago=t=>{const m=(Date.now()-new Date(t))/6e4;return m<60?Math.round(m)+" mnt lalu":m<1440?Math.round(m/60)+" jam lalu":Math.round(m/1440)+" hari lalu"};
+const si=d=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const go=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+$("#sd").innerHTML=[["showMenu()",'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',"b0"],["setMode('ess')",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',"b1"],["setMode('svy')",'<path d="M12 3l2.8 5.9 6.2.8-4.6 4.3 1.2 6.3L12 17.3 6.4 20.3l1.2-6.3L3 9.7l6.2-.8z"/>',"b2"]].map(x=>`<button id="${x[2]}" title="${x[2]=="b0"?"Menu":""}" onclick="${x[0]}">${si(x[1])}</button>`).join("")+`<button class="last" title="Kunci" onclick="sessionStorage.clear();location.reload()">${si('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>')}</button>`;
+let SD=[],mode="ess",srng=7;
+async function getJ(){if(J.length)return;const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
+async function fsrc(pin,src){const r=await fetch(API+"?pin="+encodeURIComponent(pin)+"&src="+src);return JSON.parse(await r.text())}
+async function login(){const m=$("#gm"),pin=$("#gp").value;m.textContent="Memeriksa…";
+ try{if(!API)throw 0;const d=await fsrc(pin,"ess");if(!Array.isArray(d)){m.textContent="PIN salah.";return}
+  try{sessionStorage.setItem("pin",pin)}catch(e){}showMenu()}
+ catch(e){m.textContent=API?"Gagal terhubung ke Apps Script. Periksa URL di config.js, akses (Anyone), dan versi deploy terbaru.":"config.js belum berisi URL Apps Script."}}
+function showMenu(){$("#gate").hidden=true;$("#sh").hidden=true;$("#menu").hidden=false}
+async function openDash(){$("#menu").hidden=true;$("#sh").hidden=false;$("#msg").textContent="Memuat…";
+ try{const pin=sessionStorage.getItem("pin")||"";await getJ();const[x,y]=await Promise.all([fsrc(pin,"ess"),fsrc(pin,"survey")]);D=Array.isArray(x)?x:[];SD=Array.isArray(y)?y:[];$("#msg").textContent="";
+  const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");setMode(mode)}
+ catch(e){$("#msg").textContent="Gagal memuat data. Pastikan Apps Script sudah dideploy ulang dengan versi terbaru."}}
+function setMode(m){mode=m;if($("#sh").hidden)return;document.querySelectorAll(".es").forEach(e=>e.hidden=m!="ess");document.querySelectorAll(".sv").forEach(e=>e.hidden=m!="svy");
+ ["ess","svy"].forEach(k=>$("#b-"+k).classList.toggle("on",k==m));$("#b1").classList.toggle("on",m=="ess");$("#b2").classList.toggle("on",m=="svy");$("#sub").textContent=m=="ess"?"ESS Camp":"Service Excellence";render()}
+function render(){mode=="ess"?draw():drawS()}
+function chart2(v,lb,mx,fm){const n=v.length,xs=i=>n>1?50+i*500/(n-1):300,ys=x=>135-(x||0)/mx*115,em=t=>`<svg viewBox="0 0 600 180" width="100%"><text x="300" y="90" text-anchor="middle" fill="#d9d4ff">${t}</text></svg>`;let low=-1;v.forEach((x,i)=>{if(x!==null&&(low<0||x<v[low]))low=i});
+ if(low<0)return em("Belum ada data");if(n<2)return em("Butuh data minimal 2 hari");
+ let d="M"+xs(0)+" "+ys(v[0]);for(let i=1;i<n;i++){const m=(xs(i-1)+xs(i))/2;d+=`C${m} ${ys(v[i-1])} ${m} ${ys(v[i])} ${xs(i)} ${ys(v[i])}`}
+ const lx=xs(low),ly=ys(v[low]);
+ return `<svg viewBox="0 0 600 180" width="100%"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="${lx-16}" y="22" width="32" height="130" rx="16" fill="#fff" opacity=".14"/><path d="${d}L${xs(n-1)} 152L${xs(0)} 152Z" fill="url(#g)"/><path d="${d}" fill="none" stroke="#ff8fb1" stroke-width="4"/><circle cx="${lx}" cy="${ly}" r="8" fill="#ff8fb1" stroke="#fff" stroke-width="3"/><rect x="${lx-38}" y="${ly-56}" width="76" height="38" rx="12" fill="#fff"/><text x="${lx}" y="${ly-40}" text-anchor="middle" font-size="11" fill="#8a87ab">${lb[low]}</text><text x="${lx}" y="${ly-25}" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2750">${fm(v[low])}</text>${lb.map((l,i)=>n<=8||i%2==0?`${i==low?`<rect x="${xs(i)-24}" y="158" width="48" height="20" rx="10" fill="#fff"/>`:""}<text x="${xs(i)}" y="172" text-anchor="middle" font-size="12" fill="${i==low?"#4b3d9c":"#d9d4ff"}" font-weight="700">${l}</text>`:"").join("")}</svg>`}
+const TL={salam:"Sapaan",pengetahuan:"Pengetahuan produk",rekomendasi:"Rekomendasi",coba:"Tawaran coba produk",penampilan:"Penampilan"};
+function sflt(){const f=$("#df").value,t=$("#dt").value;let lo=null,hi=null;if(f||t){lo=f?new Date(f+"T00:00:00"):null;hi=t?new Date(t+"T23:59:59"):null}else if(srng)lo=new Date(Date.now()-srng*864e5);
+ return SD.filter(e=>{const w=new Date(e.waktu);return(!lo||w>=lo)&&(!hi||w<=hi)&&(!q||String(e.ra).toLowerCase().includes(q))}).map(e=>({...e,rating:+e.rating,tags:Array.isArray(e.tags)?e.tags:[]}))}
+function drawS(){const E=sflt(),n=E.length,avg=n?E.reduce((x,e)=>x+e.rating,0)/n:null,p5=n?Math.round(E.filter(e=>e.rating==5).length/n*100):null,by={};
+ E.forEach(e=>{const k=new Date(e.waktu).toLocaleDateString("sv-SE");(by[k]=by[k]||[]).push(e.rating)});
+ const days=Object.keys(by).sort().slice(-14),vals=days.map(k=>by[k].reduce((x,y)=>x+y,0)/by[k].length),labs=days.map(k=>k.slice(8)+"/"+k.slice(5,7));
+ const low=E.filter(e=>e.rating<=2).length,txt=E.filter(e=>e.rating<5&&e.komentar),R={};E.forEach(e=>{(R[e.ra]=R[e.ra]||[]).push(e.rating)});
+ const rs=Object.entries(R).map(([k,v])=>({k,c:v.length,a:v.reduce((x,y)=>x+y,0)/v.length})).sort((x,y)=>x.a-y.a),tg={p:{},n:{}};
+ E.forEach(e=>e.tags.forEach(id=>{const b=e.rating>=4?tg.p:tg.n;b[id]=(b[id]||0)+1}));
+ const top=o=>Object.entries(o).sort((x,y)=>y[1]-x[1]).slice(0,3).map(([id,c])=>`${TL[id]||id} (${c})`).join(", ")||"–",c5=v=>v<3?"#ff6b81":v<4?"#f5b942":"#22c55e",custom=$("#df").value||$("#dt").value;
+ $("#out").innerHTML=`<div class="mg"><div class="ov"><div class="row"><b>Overview rating harian</b><span class="pill">${custom?"Rentang tanggal":srng?srng+" hari":"Semua waktu"}</span></div>${chart2(vals,labs,5,v=>v.toFixed(1)+"★")}<div class="st"><div><small>Penilaian</small><b>${n}</b></div><div class="mid"><small>Rata-rata rating</small><b>${avg===null?"–":avg.toFixed(1)}</b></div><div><small>Bintang 5</small><b>${p5===null?"–":p5+"%"}</b></div></div></div>
+ <div class="ac p"><div class="ic">💬</div><b>Masukan Tertulis</b><div class="big">${txt.length}</div></div>
+ <div class="ac k"><div class="ic">⚠️</div><b>Rating 1–2</b><div class="big">${low}</div><small style="color:#fff9">perlu ditindaklanjuti</small></div></div>
+ <div class="three">${rs.length?rs.map(r=>`<div class="pc"><div class="tile">⭐</div><b>${esc(r.k)}</b><div class="row"><small>Rata-rata</small><b>${r.a.toFixed(1)}</b></div><div class="pbar"><i style="width:${r.a/5*100}%;background:${c5(r.a)}"></i></div><span class="tag">${r.c} penilaian</span></div>`).join(""):`<div class="rt">Belum ada penilaian pada rentang ini.</div>`}</div>`;
+ $("#rt").innerHTML=`<div class="rt"><div class="row"><b>Masukan terbaru</b><small>${txt.length} pesan</small></div>${txt.sort((x,y)=>new Date(y.waktu)-new Date(x.waktu)).slice(0,8).map(e=>`<div class="cm"><b>${"★".repeat(e.rating)}${"☆".repeat(5-e.rating)} · ${esc(e.ra)}</b>${esc(e.komentar)} <small>${ago(e.waktu)}</small></div>`).join("")||"<small>Belum ada masukan tertulis.</small>"}<h3>Sering dipuji</h3><small>${top(tg.p)}</small><h3>Perlu diperbaiki</h3><small>${top(tg.n)}</small></div>`}
+function exportX(){const E=sflt();if(!E.length){alert("Belum ada data untuk di-export.");return}
+ const ws=XLSX.utils.json_to_sheet(E.sort((x,y)=>new Date(x.waktu)-new Date(y.waktu)).map(e=>({"Tanggal & Waktu":new Date(e.waktu).toLocaleString("id-ID"),"Cabang":e.cabang,"Retail Assistant":e.ra,"Rating":e.rating,"Kesan yang Dipilih":e.tags.map(i=>TL[i]||i).join("; "),"Saran / Masukan":e.komentar||""}))),wb=XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(wb,ws,"Rekap Survey");XLSX.writeFile(wb,`rekap-survey-service-${new Date().toISOString().slice(0,10)}.xlsx`)}
+try{if(sessionStorage.getItem("pin"))showMenu()}catch(e){}
 function draw(){
- const R=D.filter(r=>!tk||r.toko==tk).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}}).sort((a,b)=>(a.s??101)-(b.s??101));
- const agg={};R.forEach(r=>{for(const n in r.o)agg[n]=(agg[n]||0)+r.o[n][1]});
- const top=Object.entries(agg).filter(a=>a[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,8);
- const ok=R.filter(r=>r.s!==null),avg=ok.length?Math.round(ok.reduce((a,r)=>a+r.s,0)/ok.length):null,idle=R.filter(r=>Date.now()-new Date(r.t)>3*864e5).length,tot=ALL.filter(Boolean).length;
- let h=`<div class="g"><div class="nb"><small>RA terdaftar</small><b>${R.length}</b></div><div class="nb"><small>Rata-rata checklist</small><b style="color:${avg===null?"inherit":avg<70?"#c8452d":"inherit"}">${avg===null?"–":avg+"%"}</b></div><div class="nb"><small>Tidak aktif &gt;3 hari</small><b>${idle}</b></div></div><h3>⚠️ Poin paling sering terlewat</h3>`;
- h+=top.length?`<div class="nb">`+top.map(([n,x])=>`<div class="row" style="margin:6px 0"><span>Poin ${n}: ${esc(ALL[n]?.t||"")}</span><span class="tag">${x}×</span></div>`).join("")+`</div>`:`<div class="nb">Belum ada poin terlewat.</div>`;
- h+=`<h3>Per RA (skor terendah di atas)</h3>`+R.map(r=>{
-  const wk=Object.entries(r.o).filter(a=>a[1][1]>0).sort((a,b)=>b[1][1]-a[1][1]).slice(0,5),kz=r.qok+r.qmiss?Math.round(r.qok/(r.qok+r.qmiss)*100):null;
-  return `<details class="nb"><summary><div class="row"><b>${esc(r.name)} <small>· ${esc(r.toko)}</small></b><b>${r.s===null?"–":r.s+"%"}</b></div><div class="pg"><i style="width:${r.s||0}%;background:${col(r.s)}"></i></div><small>Materi ${Math.round(r.materi/tot*100)}% · Kuis ${kz===null?"–":kz+"%"} · ⚡${r.xp} · 🔥${r.streak} · update ${new Date(r.t).toLocaleDateString("id-ID")}</small></summary>
-  <div style="margin-top:8px">${wk.length?wk.map(([n,a])=>`<div class="row" style="margin:5px 0"><span>Poin ${n}: ${esc(ALL[n]?.t||"")}</span><span class="tag">${a[1]}×</span></div>`).join(""):"<small>Tidak ada poin terlewat.</small>"}</div></details>`}).join("");
- $("#out").innerHTML=h}
+ const R=D.filter(r=>(!tk||r.toko==tk)&&(!q||r.name.toLowerCase().includes(q))).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}});
+ const jo=J.map(()=>[0,0]),agg={},wc=J.map(()=>0);
+ R.forEach(r=>{for(const n in r.o){const[a,b]=r.o[n],j=ALL[n]?.j;if(j!=null){jo[j][0]+=a;jo[j][1]+=b}agg[n]=(agg[n]||0)+b}});
+ for(const n in agg)if(agg[n]>0&&ALL[n])wc[ALL[n].j]++;
+ const js=jo.map(a=>a[0]+a[1]?Math.round(a[0]/(a[0]+a[1])*100):null),ok=R.filter(r=>r.s!==null),avg=ok.length?Math.round(ok.reduce((a,r)=>a+r.s,0)/ok.length):null;
+ const idle=R.filter(r=>Date.now()-new Date(r.t)>3*864e5).length,need=ok.filter(r=>r.s<70).length,miss=Object.values(agg).reduce((a,b)=>a+b,0),tot=ALL.filter(Boolean).length;
+ const chart=chart2(js,js.map((v,i)=>"Pos "+(i+1)),100,v=>v+"%");
+ const ord=J.map((j,i)=>i).sort((a,b)=>(js[a]??101)-(js[b]??101)).slice(0,3);
+ $("#out").innerHTML=`<div class="mg" id="ov"><div class="ov"><div class="row"><b>Overview skor checklist per pos</b><span class="pill">${rng?"7 hari":"Semua waktu"}</span></div>${chart}<div class="st"><div><small>RA terdaftar</small><b>${R.length}</b></div><div class="mid"><small>Rata-rata checklist</small><b>${avg===null?"–":avg+"%"}</b></div><div><small>Tidak aktif &gt;3 hari</small><b>${idle}</b></div></div></div>
+ <div class="ac p"><div class="ic">⚠️</div><b>Poin Terlewat</b><div class="big">${miss}×</div></div>
+ <div class="ac k"><div class="ic">👥</div><b>Perlu Pendampingan</b><div class="big">${need} RA</div><small style="color:#fff9">skor di bawah 70%</small></div></div>
+ <div class="three" id="pos">${ord.map(i=>`<div class="pc"><div class="tile">${J[i].e}</div><b>${i+1}. ${esc(J[i].n)}</b><div class="row"><small>Skor</small><b>${js[i]===null?"–":js[i]+"%"}</b></div><div class="pbar"><i style="width:${js[i]||0}%;background:${col(js[i])}"></i></div><span class="tag">${wc[i]} poin lemah</span></div>`).join("")}</div>`;
+ const L=[...R].sort(tb?(a,b)=>(a.s??101)-(b.s??101):(a,b)=>new Date(b.t)-new Date(a.t)),tkm={};
+ R.forEach(r=>{if(r.s!==null)(tkm[r.toko]=tkm[r.toko]||[]).push(r.s)});
+ $("#rt").innerHTML=`<div class="rt" id="rtl"><div class="row"><b>RA</b><small>${R.length} orang</small></div><div class="tabs"><button class="${tb?"":"on"}" onclick="tb=0;draw()">Aktivitas</button><button class="${tb?"on":""}" onclick="tb=1;draw()">Perlu bantuan</button></div>`+L.map(r=>{
+  const wk=Object.entries(r.o).filter(a=>a[1][1]>0).sort((a,b)=>b[1][1]-a[1][1]).slice(0,4),kz=r.qok+r.qmiss?Math.round(r.qok/(r.qok+r.qmiss)*100)+"%":"–",h=[...r.name].reduce((a,c)=>a+c.charCodeAt(0),0)%360;
+  return `<details class="ra"><summary><span class="av" style="background:hsl(${h} 60% 60%)">${esc(r.name[0]||"?").toUpperCase()}</span><div><b>${esc(r.name)}</b><small>${esc(r.toko)} · ${ago(r.t)}</small></div><span class="chip" style="background:${col(r.s)}33;color:#2b2750">${r.s===null?"–":r.s+"%"}</span></summary><div class="dt"><small>Materi ${Math.round(r.materi/tot*100)}% · Kuis ${kz} · ⚡${r.xp} · 🔥${r.streak}</small>${wk.length?wk.map(([n,a])=>`<div>Poin ${n}: ${esc((ALL[n]?.t||"").slice(0,80))}… <b>${a[1]}×</b></div>`).join(""):"<div>Tidak ada poin terlewat.</div>"}</div></details>`}).join("")
+  +`<h3 id="tkb">Per toko</h3>`+(Object.keys(tkm).length?Object.entries(tkm).map(([t,v])=>{const a=Math.round(v.reduce((x,y)=>x+y,0)/v.length);return `<div class="row"><small>${esc(t)}</small><b>${a}%</b></div><div class="pbar"><i style="width:${a}%;background:${col(a)}"></i></div>`}).join(""):"<small>Belum ada data checklist.</small>")+`</div>`}
 </script>
 </body>
 </html>
