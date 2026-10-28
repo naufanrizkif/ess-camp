@@ -32,10 +32,11 @@ function sc(o){let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Ma
 async function load(){const m=$("#msg");m.textContent="Memuat…";
  try{if(!API)throw 0;
   if(!J.length){const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
-  D=await(await fetch(API+"?pin="+encodeURIComponent($("#pin").value))).json();
+  const r=await fetch(API+"?pin="+encodeURIComponent($("#pin").value)),tx=await r.text();
+  try{D=JSON.parse(tx)}catch(e){m.textContent="Apps Script tidak mengembalikan data. Biasanya Who has access belum diatur ke Anyone, atau URL bukan yang berakhiran /exec.";return}
   m.textContent=D.length?"":"Belum ada data, atau PIN salah.";
   const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");draw()
- }catch(e){m.textContent="Gagal memuat. Pastikan config.js berisi URL Apps Script yang benar."}}
+ }catch(e){m.textContent=API?"Gagal terhubung ke Apps Script. Periksa URL di config.js dan pengaturan akses (Anyone).":"config.js belum berisi URL Apps Script."}}
 function draw(){
  const R=D.filter(r=>!tk||r.toko==tk).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}}).sort((a,b)=>(a.s??101)-(b.s??101));
  const agg={};R.forEach(r=>{for(const n in r.o)agg[n]=(agg[n]||0)+r.o[n][1]});
