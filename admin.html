@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dasbor Supervisor ESS</title>
+<script src="config.js"></script>
+<style>
+:root{--ink:#1b1b1b;--bg:#dfe9cf}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:700 15px/1.4 "Avenir Next","Trebuchet MS",system-ui,sans-serif;padding:16px}
+main{max-width:760px;margin:auto}h1{margin:0 0 12px;font-weight:900}h3{margin:18px 0 8px}
+.nb{border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);background:#fff;padding:12px;margin-bottom:12px}
+input,select,button{font:inherit;border:3px solid var(--ink);border-radius:12px;padding:9px 12px;background:#fff}button{cursor:pointer;background:#ffd23f;font-weight:900}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.g .nb{text-align:center;margin:0}.g b{font-size:26px;display:block}
+.pg{height:12px;border:3px solid var(--ink);border-radius:9px;background:#fff;overflow:hidden;margin:6px 0}.pg i{display:block;height:100%}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}summary{cursor:pointer;list-style:none}small{color:#4a5a50}
+.tag{border:2px solid var(--ink);border-radius:10px;padding:1px 8px;background:#ff5a4f;white-space:nowrap}
+</style>
+</head>
+<body><main>
+<h1>Dasbor Supervisor ESS</h1>
+<div class="bar"><input id="pin" type="password" placeholder="PIN supervisor"><button onclick="load()">Buka</button>
+<select id="tk" onchange="tk=this.value;draw()"><option value="">Semua toko</option></select>
+<select onchange="rng=+this.value;draw()"><option value="7">7 hari terakhir</option><option value="0">Semua waktu</option></select></div>
+<div id="msg"></div><div id="out"></div>
+</main>
+<script>
+const API=window.ESS_API||"";let D=[],J=[],ALL=[],rng=7,tk="";
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const col=v=>v===null?"#cfd6c6":v<70?"#ff5a4f":v<90?"#ffd23f":"#3fbf6b";
+function sc(o){let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Math.round(a/(a+b)*100):null}
+async function load(){const m=$("#msg");m.textContent="Memuat…";
+ try{if(!API)throw 0;
+  if(!J.length){const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
+  D=await(await fetch(API+"?pin="+encodeURIComponent($("#pin").value))).json();
+  m.textContent=D.length?"":"Belum ada data, atau PIN salah.";
+  const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");draw()
+ }catch(e){m.textContent="Gagal memuat. Pastikan config.js berisi URL Apps Script yang benar."}}
+function draw(){
+ const R=D.filter(r=>!tk||r.toko==tk).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}}).sort((a,b)=>(a.s??101)-(b.s??101));
+ const agg={};R.forEach(r=>{for(const n in r.o)agg[n]=(agg[n]||0)+r.o[n][1]});
+ const top=Object.entries(agg).filter(a=>a[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ const ok=R.filter(r=>r.s!==null),avg=ok.length?Math.round(ok.reduce((a,r)=>a+r.s,0)/ok.length):null,idle=R.filter(r=>Date.now()-new Date(r.t)>3*864e5).length,tot=ALL.filter(Boolean).length;
+ let h=`<div class="g"><div class="nb"><small>RA terdaftar</small><b>${R.length}</b></div><div class="nb"><small>Rata-rata checklist</small><b style="color:${avg===null?"inherit":avg<70?"#c8452d":"inherit"}">${avg===null?"–":avg+"%"}</b></div><div class="nb"><small>Tidak aktif &gt;3 hari</small><b>${idle}</b></div></div><h3>⚠️ Poin paling sering terlewat</h3>`;
+ h+=top.length?`<div class="nb">`+top.map(([n,x])=>`<div class="row" style="margin:6px 0"><span>Poin ${n}: ${esc(ALL[n]?.t||"")}</span><span class="tag">${x}×</span></div>`).join("")+`</div>`:`<div class="nb">Belum ada poin terlewat.</div>`;
+ h+=`<h3>Per RA (skor terendah di atas)</h3>`+R.map(r=>{
+  const wk=Object.entries(r.o).filter(a=>a[1][1]>0).sort((a,b)=>b[1][1]-a[1][1]).slice(0,5),kz=r.qok+r.qmiss?Math.round(r.qok/(r.qok+r.qmiss)*100):null;
+  return `<details class="nb"><summary><div class="row"><b>${esc(r.name)} <small>· ${esc(r.toko)}</small></b><b>${r.s===null?"–":r.s+"%"}</b></div><div class="pg"><i style="width:${r.s||0}%;background:${col(r.s)}"></i></div><small>Materi ${Math.round(r.materi/tot*100)}% · Kuis ${kz===null?"–":kz+"%"} · ⚡${r.xp} · 🔥${r.streak} · update ${new Date(r.t).toLocaleDateString("id-ID")}</small></summary>
+  <div style="margin-top:8px">${wk.length?wk.map(([n,a])=>`<div class="row" style="margin:5px 0"><span>Poin ${n}: ${esc(ALL[n]?.t||"")}</span><span class="tag">${a[1]}×</span></div>`).join(""):"<small>Tidak ada poin terlewat.</small>"}</div></details>`}).join("");
+ $("#out").innerHTML=h}
+</script>
+</body>
+</html>

@@ -9,6 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="apple-touch-icon.png">
 <title>ESS Camp</title>
+<script src="config.js"></script>
 <style>
 :root{--ink:#1b1b1b;--bg:#dfe9cf;--lime:#c9ec5a;--org:#ff9a5c;--pink:#ff9ecb;--lav:#a99bf5;--sky:#8fd3f5;--yel:#ffd23f;--grn:#3fbf6b;--red:#ff5a4f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -155,10 +156,15 @@ J.forEach((j,i)=>j.e=av(FJ[i],34));
 const $=s=>document.querySelector(s),app=$("#app");
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const day=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),today=()=>day(new Date());
-let S={name:"",av:0,xp:0,hearts:5,hd:"",days:[],done:{},paham:{},log:{},miss:{},qok:{}};
+let S={name:"",id:"",toko:"",av:0,xp:0,hearts:5,hd:"",days:[],done:{},paham:{},log:{},miss:{},qok:{}};
 try{const r=localStorage.getItem("ess2");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 if(S.hd!=today()){S.hearts=5;S.hd=today()}
-const save=()=>{try{localStorage.setItem("ess2",JSON.stringify(S))}catch(e){}};
+if(!S.id)S.id=Math.random().toString(36).slice(2,10);
+const API=window.ESS_API||"";let tm;
+const save=()=>{try{localStorage.setItem("ess2",JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(sync,2500)};
+function pts(r){const P=stats(r),o={};for(const n in P)if(P[n].ok||P[n].x)o[n]=[P[n].ok,P[n].x];return o}
+const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
+function sync(){if(!API||!S.name||!S.toko)return;try{fetch(API,{method:"POST",mode:"no-cors",body:JSON.stringify({id:S.id,name:S.name,toko:S.toko,xp:S.xp,streak:streak(),materi:Object.keys(S.paham).length,qok:sum(S.qok),qmiss:sum(S.miss),p:pts(0),p7:pts(7)})})}catch(e){}}
 function streak(){let n=0,d=new Date();if(!S.days.includes(day(d)))d.setDate(d.getDate()-1);while(S.days.includes(day(d))){n++;d.setDate(d.getDate()-1)}return n}
 const LS=[];J.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
 let tab="path",L=null,shift="Pagi";
@@ -181,11 +187,11 @@ function fin(){const l=L.l,pr=l.id<0,xp=pr?L.xp:S.done[l.id]?5:20+L.xp;S.xp+=xp;
  $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="tutup()">KEMBALI KE JALUR</button></div>`}
 const avGrid=()=>`<div class="gr">${AV.map((a,i)=>`<button class="${i==S.av?"sel":""}" onclick="setAv(${i})">${av(i,52)}</button>`).join("")}</div>`;
 function setAv(i){S.av=i;save();if(!$("#ov").hidden&&!L)onb();else render()}
-function onb(){$("#ov").hidden=false;$("#ov").innerHTML=`<div class="bd c"><h2>Selamat datang di<br>ESS Camp ⛺</h2><p>Pilih karaktermu, lalu isi namamu.</p>${avGrid()}<input class="nb inp" placeholder="Nama kamu" value="${esc(S.name)}" oninput="S.name=this.value"></div><div class="ft"><button class="nb btn big" style="background:var(--lime)" onclick="if(S.name.trim()){S.name=S.name.trim();save();$('#ov').hidden=true;render()}">MULAI PETUALANGAN</button></div>`}
+function onb(){$("#ov").hidden=false;$("#ov").innerHTML=`<div class="bd c"><h2>Selamat datang di<br>ESS Camp ⛺</h2><p>Pilih karaktermu, lalu isi nama dan tokomu.</p>${avGrid()}<input class="nb inp" placeholder="Nama kamu" value="${esc(S.name)}" oninput="S.name=this.value"><input class="nb inp" placeholder="Nama toko (contoh: EIGER Semarang)" value="${esc(S.toko||"")}" oninput="S.toko=this.value"></div><div class="ft"><button class="nb btn big" style="background:var(--lime)" onclick="if(S.name.trim()&&(S.toko||'').trim()){S.name=S.name.trim();S.toko=S.toko.trim();save();$('#ov').hidden=true;render()}">MULAI PETUALANGAN</button></div>`}
 function me(){const n=["M","S","S","R","K","J","S"],d=new Date();d.setDate(d.getDate()-6);let w="";
  for(let i=0;i<7;i++){w+=`<div class="${S.days.includes(day(d))?"on":""}">${n[d.getDay()]}<b>${S.days.includes(day(d))?"⚡":""}</b></div>`;d.setDate(d.getDate()+1)}
  const pr=J.map((j,i)=>{const t=LS.filter(l=>l.ji==i),k=t.filter(l=>S.done[l.id]).length;return `<div>${j.e} ${j.n}<div class="pg"><i style="width:${k/t.length*100}%;background:${C[i]}"></i></div></div>`}).join("");
- return `<main><div class="nb card" style="background:var(--yel)"><div class="row"><h2>Streak ${streak()} hari 🔥</h2><b>⚡ ${S.xp} XP</b></div><div class="wk">${w}</div></div><div class="nb card"><h3>Progres pos</h3>${pr}<small>${Object.keys(S.paham).length} dari ${ALL.length} poin sudah dipelajari</small></div><div class="nb card"><h3>Ganti karakter</h3>${avGrid()}<input class="nb inp" value="${esc(S.name)}" oninput="S.name=this.value;save()"></div><button class="nb btn big" style="background:#fff" onclick="if(confirm('Hapus semua progres?')){localStorage.removeItem('ess2');location.reload()}">Reset progres</button></main>`}
+ return `<main><div class="nb card" style="background:var(--yel)"><div class="row"><h2>Streak ${streak()} hari 🔥</h2><b>⚡ ${S.xp} XP</b></div><div class="wk">${w}</div></div><div class="nb card"><h3>Progres pos</h3>${pr}<small>${Object.keys(S.paham).length} dari ${ALL.length} poin sudah dipelajari</small></div><div class="nb card"><h3>Ganti karakter</h3>${avGrid()}<input class="nb inp" value="${esc(S.name)}" oninput="S.name=this.value;save()"><input class="nb inp" placeholder="Nama toko" value="${esc(S.toko||"")}" oninput="S.toko=this.value;save()"></div><button class="nb btn big" style="background:#fff" onclick="if(confirm('Hapus semua progres?')){localStorage.removeItem('ess2');location.reload()}">Reset progres</button></main>`}
 function chk(){const k=today()+"|"+shift,D=S.log[k]||{};let ok=0,x=0;ALL.forEach(p=>{if(D[p.no]=="ok")ok++;if(D[p.no]=="x")x++});
  let h=`<main><div class="seg">${["Pagi","Siang"].map(s=>`<button class="nb btn ${s==shift?"on":""}" onclick="shift='${s}';render()">Shift ${s}</button>`).join("")}</div><div class="nb card" style="background:var(--lime)"><small>Skor shift (N/A tidak dihitung)</small><h2 style="font-size:34px;margin:0">${ok+x?Math.round(ok/(ok+x)*100)+"%":"–"}</h2>${ok} OK · ${x} terlewat</div>`;
  J.forEach((j,i)=>{h+=`<h3>${j.e} ${i+1}. ${j.n}</h3>`;ALL.filter(p=>p.j==i).forEach(p=>{const v=D[p.no];h+=`<div class="nb card"><div>${p.no}. ${p.t}</div><div class="st">${[["ok","OK"],["x","Terlewat"],["na","N/A"]].map(b=>`<button class="${b[0]} ${v==b[0]?"on":""}" onclick="lg(${p.no},'${b[0]}')">${b[1]}</button>`).join("")}</div></div>`})});
@@ -204,11 +210,11 @@ function prac(){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");r
  const sc=J.map((j,i)=>[i,(S.miss[i]||0)-(S.qok[i]||0)*.5+Math.random()]).sort((a,b)=>b[1]-a[1]);
  L={l:{ji:sc[0][0],i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0};lesson()}
 let rng=7;
-function stats(){const d=new Date();d.setDate(d.getDate()-6);const lo=day(d),P={};ALL.forEach(p=>P[p.no]={ok:0,x:0});
- for(const k in S.log){if(rng&&k.split("|")[0]<lo)continue;for(const n in S.log[k]){const v=S.log[k][n];if(P[n]&&(v=="ok"||v=="x"))P[n][v]++}}return P}
+function stats(r=rng){const d=new Date();d.setDate(d.getDate()-6);const lo=day(d),P={};ALL.forEach(p=>P[p.no]={ok:0,x:0});
+ for(const k in S.log){if(r&&k.split("|")[0]<lo)continue;for(const n in S.log[k]){const v=S.log[k][n];if(P[n]&&(v=="ok"||v=="x"))P[n][v]++}}return P}
 function dash(){const P=stats(),J2=J.map(()=>({ok:0,x:0}));let ok=0,x=0;
  ALL.forEach(p=>{ok+=P[p.no].ok;x+=P[p.no].x;J2[p.j].ok+=P[p.no].ok;J2[p.j].x+=P[p.no].x});
- const sum=o=>Object.values(o).reduce((a,b)=>a+b,0),np=Object.keys(S.paham).length,mat=Math.round(np/ALL.length*100),cek=ok+x?Math.round(ok/(ok+x)*100):null,qo=sum(S.qok),qm=sum(S.miss),kz=qo+qm?Math.round(qo/(qo+qm)*100):null;
+ const np=Object.keys(S.paham).length,mat=Math.round(np/ALL.length*100),cek=ok+x?Math.round(ok/(ok+x)*100):null,qo=sum(S.qok),qm=sum(S.miss),kz=qo+qm?Math.round(qo/(qo+qm)*100):null;
  const m=[mat,cek,kz].filter(v=>v!==null),tot=Math.round(m.reduce((a,b)=>a+b,0)/m.length),col=v=>v===null?"#cfd6c6":v<70?"#ff5a4f":v<90?"#ffd23f":"#3fbf6b",ar='d="M20 100A80 80 0 0 1 180 100" fill="none" pathLength="100"';
  let h=`<main><div class="row"><h2 style="font-size:26px">Dasbor ${esc(S.name||"RA")}</h2>${av(S.av,48)}</div><div class="seg">${[7,0].map(r=>`<button class="nb btn ${r==rng?"on":""}" onclick="rng=${r};render()">${r?"7 hari":"Semua"}</button>`).join("")}</div>
  <div class="nb card" style="background:var(--lav)"><svg viewBox="0 0 200 112" width="100%"><path ${ar} stroke="${ink}" stroke-width="32"/><path ${ar} stroke="#fff" stroke-width="24"/><path ${ar} stroke="${col(tot)}" stroke-width="24" stroke-dasharray="${tot} 100"/><text x="100" y="98" text-anchor="middle" font-size="32" font-weight="900" fill="${ink}" stroke="none">${tot}%</text></svg><div style="text-align:center">Skor kesiapan ESS</div></div>
@@ -218,8 +224,8 @@ function dash(){const P=stats(),J2=J.map(()=>({ok:0,x:0}));let ok=0,x=0;
  h+=wk.length?wk.map(p=>`<div class="nb card"><div class="row"><b>Poin ${p.no} · ${J[p.j].n}</b><span class="nb chip" style="background:var(--red);margin:0">${P[p.no].x}× terlewat</span></div><div style="margin:6px 0">${p.t}</div><button class="nb btn" style="padding:8px 12px;background:var(--yel)" onclick="start(${LS.findIndex(l=>l.pts.some(q=>q[0]==p.no))})">Latihan pos ini</button></div>`).join(""):`<div class="nb card">Belum ada poin terlewat. Isi checklist tiap shift supaya poin lemah muncul di sini.</div>`;
  h+=`<h3>Skor checklist per pos</h3><div class="nb card">`+J.map((j,i)=>{const a=J2[i],n=a.ok+a.x,sc=n?Math.round(a.ok/n*100):null;return `<div class="row"><span>${j.e} ${i+1}. ${j.n}</span><b>${sc===null?"–":sc+"%"}</b></div><div class="pg"><i style="width:${sc||0}%;background:${col(sc)}"></i></div>${S.miss[i]?`<small>Kuis salah ${S.miss[i]}×</small>`:""}`}).join("")+`</div><div class="nb card">📚 Belum dipelajari: <b>${ALL.length-np} poin</b><br><small>Data ini tersimpan di HP ini saja.</small></div></main>`;
  return h}
-function render(){nav();app.innerHTML=({path,chk,me,dash}[tab])();if(!S.name)onb()}
-render();
+function render(){nav();app.innerHTML=({path,chk,me,dash}[tab])();if(!S.name||!(S.toko||"").trim())onb()}
+render();sync();
 </script>
 </body>
 </html>
