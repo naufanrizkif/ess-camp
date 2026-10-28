@@ -162,11 +162,11 @@ try{const r=localStorage.getItem("ess2");if(r)S=Object.assign(S,JSON.parse(r))}c
 if(S.hd!=today()){S.hearts=5;S.hd=today()}
 if(!S.id)S.id=Math.random().toString(36).slice(2,10);
 const API=window.ESS_API||"";let tm,sst="";
-const save=()=>{try{localStorage.setItem("ess2",JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(sync,2500)};
+const save=()=>{try{localStorage.setItem("ess2",JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(sync,700)};
 function pts(r){const P=stats(r),o={};for(const n in P)if(P[n].ok||P[n].x)o[n]=[P[n].ok,P[n].x];return o}
 const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
 function sync(){if(!API){sst="Alamat Apps Script belum terisi. Cek file config.js.";return}if(!S.name||!S.toko){sst="Nama atau toko belum diisi.";return}
- try{fetch(API,{method:"POST",mode:"no-cors",body:JSON.stringify({id:S.id,name:S.name,toko:S.toko,xp:S.xp,streak:streak(),materi:Object.keys(S.paham).length,qok:sum(S.qok),qmiss:sum(S.miss),p:pts(0),p7:pts(7)})}).then(()=>{sst="Terkirim pukul "+new Date().toLocaleTimeString("id-ID")}).catch(()=>{sst="Gagal terkirim. Cek koneksi internet."})}catch(e){sst="Gagal terkirim."}}
+ try{fetch(API,{method:"POST",mode:"no-cors",keepalive:true,body:JSON.stringify({id:S.id,name:S.name,toko:S.toko,xp:S.xp,streak:streak(),materi:Object.keys(S.paham).length,qok:sum(S.qok),qmiss:sum(S.miss),p:pts(0),p7:pts(7)})}).then(()=>{sst="Terkirim pukul "+new Date().toLocaleTimeString("id-ID")}).catch(()=>{sst="Gagal terkirim. Cek koneksi internet."})}catch(e){sst="Gagal terkirim."}}
 function streak(){let n=0,d=new Date();if(!S.days.includes(day(d)))d.setDate(d.getDate()-1);while(S.days.includes(day(d))){n++;d.setDate(d.getDate()-1)}return n}
 const LS=[];J.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
 const shuf=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
@@ -272,6 +272,7 @@ function dash(){const P=stats(),J2=J.map(()=>({ok:0,x:0}));let ok=0,x=0;
  return h}
 function render(){nav();app.innerHTML=({path,chk,me,dash}[tab])();if(!S.name||!(S.toko||"").trim())onb()}
 render();sync();
+document.addEventListener("visibilitychange",()=>{if(document.hidden)sync()});window.addEventListener("pagehide",sync);
 </script>
 </body>
 </html>
