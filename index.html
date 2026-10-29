@@ -59,6 +59,7 @@ h2,h3{margin:8px 0;font-weight:900}
 .st{display:flex;gap:6px;margin-top:8px}.st button{flex:1;padding:8px 0;border:3px solid var(--ink);border-radius:12px;background:#fff;font-size:13px}
 .st .ok.on{background:var(--grn)}.st .x.on{background:var(--red)}.st .na.on{background:#cfd6c6}
 .qt{display:inline-block;padding:2px 10px;border:3px solid var(--ink);border-radius:10px;background:var(--lav);font-size:12px;margin-bottom:8px}button:disabled{opacity:.5;cursor:not-allowed}
+.clsb{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.cl{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px;text-align:left;background:#fff}.cl.on{background:var(--lime)}.cl span{font-size:26px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -120,7 +121,41 @@ const J=[
 [45,"Pasang POP Acrylic “Pembelanjaan Gratis jika tidak mendapatkan struk”."],
 [46,"Area kasir bersih, rapi, bebas debu dan barang pribadi."]]},
 {n:"Salam Perpisahan",e:"🤝",p:[
-[47,"Salam penutup dengan sapaan daerah, nama, dan wishes sambil smiling eyes, tangan kanan di dada kiri. Tanpa info produk: “Hati-hati di jalan”, “Sehat selalu”, “Semoga suka dengan produknya”."]]}
+[47,"Salam penutup dengan sapaan daerah, nama, dan wishes sambil smiling eyes, tangan kanan di dada kiri. Tanpa info produk: “Hati-hati di jalan”, “Sehat selalu”, “Semoga suka dengan produknya”."]]},
+{n:"Tampilan Tampak Depan",e:"🏪",p:[
+[48,"Signage totem terlihat jelas dari kedua sisi, dalam kondisi baik dan terawat (N/A untuk toko di dalam mall)."],
+[49,"Lampu signage (lampu fasad dan lampu totem) menyala dan berfungsi baik (N/A untuk kunjungan pagi sampai siang)."],
+[50,"Fasad tampak depan, termasuk poster, dalam kondisi baik dan terawat."],
+[51,"Window display jelas, rapi, bersih, dan produk yang dipajang tersedia di toko."],
+[52,"Area parkir punya signage dan himbauan, garis parkir khusus motor, serta bersih, rapi, dan terawat (N/A jika tidak ada area parkir)."],
+[53,"Toko sudah buka pukul 09.00 sesuai jam operasional."]]},
+{n:"Suasana & Kenyamanan",e:"🎶",p:[
+[54,"Area display selain window display (lemari, furniture, mannequin) bersih, rapi, dan memudahkan pelanggan mencari produk sesuai section."],
+[55,"AC berfungsi baik dan suhu ruangan sejuk, sekitar 23 sampai 26 derajat."],
+[56,"Volume musik terdengar jelas namun tidak mengganggu percakapan di dalam toko."],
+[57,"Produk dilengkapi price tag oranye, barcode, dan sensor matic tag sesuai peruntukannya. Produk promo khusus memakai price tag before dan after."],
+[58,"Apparel seperti kaos dan kemeja rapi, tidak kusut, dan memakai hanger size tag yang sesuai (kecuali bahan nylon crinkle)."],
+[59,"Penerangan toko merata dan cukup terang, tidak ada bola lampu padam (kecuali smart store)."],
+[60,"Jalur jalan pelanggan bersih dan bebas dari dus, tangga, alat setrika, dan peralatan kebersihan."],
+[61,"Dinding dan langit-langit bersih, rapi, dan bebas noda bocor, rembesan, serta sarang laba-laba."],
+[62,"TV toko menyala dan menampilkan materi promosi dengan visual yang jelas dan informatif."],
+[63,"Banner dan acrylic promo terpasang rapi, bersih, utuh, tanpa coretan. Acrylic rak tengah dipasang bolak-balik."],
+[64,"Banner dan acrylic yang dipajang adalah materi promo yang masih berlaku, bukan yang kedaluwarsa."]]},
+{n:"Penampilan Retail Assistant",e:"👔",p:[
+[65,"Seragam rapi, bersih, tidak kusut, tidak lecek, dan tidak pudar. Tidak boleh memakai ripped jeans atau jeans sobek."],
+[66,"Seragam sesuai hari kerja. Karyawan baru memakai polo shirt hitam dan celana panjang jeans hitam."],
+[67,"Memakai lanyard dan ID card (lanyard terbalik tidak masalah)."],
+[68,"Wajah sesuai standar. Wanita: make up natural (bedak, eye shadow, eye liner, mascara, blush on, lipstik). Pria: tanpa jenggot, kumis, atau jambang."],
+[69,"Memakai sepatu EIGER yang bersih dan kaos kaki gelap. RA baru berpolo hitam memakai sepatu dominan hitam."],
+[70,"Rambut bersih dan rapi, tidak dicat. Rambut panjang wajib dikuncir dan poni tidak menutupi mata. Jilbab polos, segi empat, senada baju, dimasukkan ke kerah, dengan manset senada."],
+[71,"Kuku pendek, bersih, tanpa cat kuku. Tato tidak terlihat setelah berseragam. Wanita boleh 1 tindik per telinga, pria bebas tindik."]]},
+{n:"Penampilan Kasir",e:"🧼",p:[
+[72,"Jari dan kuku kasir pendek, bersih, rapi, dan tidak memakai cat kuku."],
+[73,"Bebas dari bau badan, bau rokok, dan bau mulut."],
+[74,"Bebas tato yang terlihat dan tindik (pria). Wanita boleh 1 tindik per telinga."]]},
+{n:"Toilet",e:"🚻",p:[
+[75,"Toilet bersih, rapi, tidak berbau, dilengkapi tissue, sabun cair, dan tempat sampah, serta berfungsi baik (tidak berlaku untuk toko di dalam mall dan bandara)."]]}
+
 ];
 const Q=[
 {q:"Pelanggan baru masuk, kamu sedang melayani pelanggan lain. Apa yang dilakukan?",o:["Pura-pura tidak lihat","Cukup tersenyum ke pelanggan baru","Tinggalkan pelanggan pertama untuk menyapa"],a:1,w:"Kalau sedang melayani, cukup tersenyum. Salam lengkap dan gestur tidak perlu."},
@@ -132,6 +167,48 @@ const Q=[
 {q:"Salam penutup yang paling sesuai standar ESS?",o:["“Makasih ya.”","“Terima kasih Kak Dina, semoga hikingnya lancar dan aman ya.”","Diam sambil melihat layar"],a:1,w:"Pakai sapaan, nama (jika tahu), wishes, smiling eyes, dan tangan kanan di dada kiri."}
 ];
 
+const K=[
+{n:"Script & Psychology Selling",e:"🗣️",p:[
+[101,"Tujuan: punya kalimat pembuka, penggalian kebutuhan, dan penawaran tambahan yang natural, bukan terkesan hafalan atau memaksa."],
+[102,"Opening script: greeting yang membuka percakapan tanpa terkesan template."],
+[103,"Teknik probing: gali kebutuhan lewat aktivitas, cuaca, dan tujuan pemakaian. Contoh: “Rencana naik gunung ke mana, Kak, dan cuacanya dingin atau hujan?”"],
+[104,"Psychology selling dasar: reciprocity (memberi bantuan dulu), social proof (produk yang banyak dipilih), dan framing benefit dibanding sekadar fitur."],
+[105,"Bridging statement: kalimat penghubung untuk menawarkan item tambahan. Contoh: “Biar tetap hangat di puncak, banyak yang sekalian pakai base layer ini, Kak.”"]]},
+{n:"Product Pairing & Mix and Match",e:"👕",p:[
+[106,"Tujuan: tawarkan minimal 1 item pelengkap di setiap transaksi. Inilah pengungkit utama kenaikan UPT."],
+[107,"Jaket: pasangkan dengan kaos atau base layer, celana outdoor, topi atau beanie, dan tas daypack kecil."],
+[108,"Kaos atau base layer: pasangkan dengan celana outdoor, jaket ringan, topi, dan kaos kaki trekking."],
+[109,"Sepatu outdoor: pasangkan dengan kaos kaki khusus, gaiter, tas kecil, dan perawatan sepatu."],
+[110,"Tas atau daypack: pasangkan dengan rain cover, botol minum, dompet kecil, dan jaket ringan."]]},
+{n:"Color Matching (OOTD)",e:"🎨",p:[
+[111,"Merah: cocok dengan kaos putih, abu-abu, atau hitam; celana krem, khaki, atau hitam; topi hitam atau navy."],
+[112,"Navy atau biru tua: cocok dengan kaos putih, abu muda, atau mustard; celana khaki, krem, atau abu tua; topi krem atau navy."],
+[113,"Hijau army: cocok dengan kaos hitam, putih, atau tan; celana hitam atau khaki; topi hitam atau coklat tua."],
+[114,"Hitam: cocok dengan kaos warna apa pun; celana abu, khaki, atau hitam; topi hitam paling aman."],
+[115,"Krem atau tan: cocok dengan kaos coklat tua, hitam, atau navy; celana hitam atau coklat tua; topi coklat tua atau hitam."]]},
+{n:"Handling Stok Kosong",e:"📦",p:[
+[116,"Langkah 1, konfirmasi dan empati: sampaikan jujur bahwa produk kosong tanpa membuat pelanggan menunggu lama."],
+[117,"Langkah 2, gali ulang kebutuhan: tanyakan lagi fungsi atau aktivitasnya agar alternatif tetap tepat sasaran."],
+[118,"Langkah 3, tawarkan model lain dengan fungsi setara atau lebih baik, dan jelaskan perbedaannya dengan jujur."],
+[119,"Langkah 4, alternatif lanjutan: pre-order, cek stok UPT lain, atau follow-up saat restock agar hubungan tetap terjaga."]]},
+{n:"Lihat-lihat & Objection",e:"👀",p:[
+[120,"Jika pelanggan “cuma lihat-lihat”, jangan tinggalkan begitu saja. Dampingi dengan jarak wajar dan tawarkan info tanpa memaksa."],
+[121,"Pakai pertanyaan terbuka: “Lagi cari untuk kebutuhan apa, Kak? Siapa tahu saya bisa bantu rekomendasikan.”"],
+[122,"Tunjukkan 1 produk best seller atau promo yang relevan sebagai pemantik minat, bukan seluruh katalog."],
+[123,"Beri ruang tanpa follow-up berlebihan, tapi tetap terlihat siap membantu kapan saja."],
+[124,"“Mahal dibanding brand lain”: jelaskan value jangka panjang seperti durability, garansi, dan teknologi."],
+[125,"“Belum yakin size atau kualitasnya”: tawarkan coba atau fitting, dan jelaskan kebijakan tukar atau retur."],
+[126,"“Mau bandingkan dulu”: beri info yang memudahkan perbandingan dan tinggalkan kesan positif."],
+[127,"“Nanti aja belinya”: sampaikan info promo atau stok terbatas secara jujur untuk urgensi yang wajar."]]},
+{n:"Teknik Closing & Bundling",e:"🤝",p:[
+[128,"Assumptive close: lanjutkan seolah keputusan beli sudah diambil. Contoh: “Mau saya siapkan size M sekalian ya, Kak?”"],
+[129,"Alternative close: beri 2 pilihan yang keduanya mengarah ke pembelian. Contoh: “Yang warna hitam atau navy, Kak?”"],
+[130,"Urgency close: sampaikan stok terbatas atau promo yang akan berakhir secara jujur, tanpa menekan berlebihan."],
+[131,"RA wajib update paket bundling dan promo yang berjalan setiap minggu."],
+[132,"Tawarkan bundling secara natural saat momen closing, bukan dipaksakan di luar kebutuhan pelanggan."],
+[133,"Saat pelanggan bilang “bagus sih, tapi mahal”: jelaskan value teknologi, info bundling aktif, lalu tutup dengan assumptive close ukuran."]]}
+];
+const JA=J.concat(K);
 const ALL=J.flatMap((j,i)=>j.p.map(p=>({no:p[0],t:p[1],j:i})));
 const C=["#c9ec5a","#ff9ecb","#8fd3f5","#a99bf5","#ff9a5c","#ffd23f"],ink="#1b1b1b";
 const SK=["#ffd9c7","#f6c3a4","#c98f6b","#8a5a3c"];
@@ -146,18 +223,18 @@ const AV=[
 {s:0,h:"#3b82f6",b:"",t:"cap",e:"w",m:"tongue"},{s:0,h:"#ffffff",b:"tuft",t:"beard",e:"g",m:"flat"},
 {s:3,h:"#22c55e",b:"afro",t:"",e:"s",m:"grin"},{s:0,h:"#1b1b1b",b:"",t:"bangs",e:"w",m:"smile"},
 {s:0,h:"#ff9ecb",b:"",t:"hat",e:"r",m:"tongue"},{s:1,h:"#1b1b1b",b:"afro",t:"band",e:"h",m:"smile"}];
-const FJ=[17,19,13,5,16,15];
+const FJ=[17,19,13,5,16,15,2,7,11,9,18,1,3,4,6,8,10];
 function av(i,z=56){const a=AV[i%AV.length],F=`fill="${a.h}"`;
  const bk={bob:`<ellipse cx="50" cy="52" rx="39" ry="38" ${F}/>`,afro:`<circle cx="50" cy="46" r="41" ${F}/>`,long:`<path d="M12 98V48Q12 6 50 6Q88 6 88 48V98Z" ${F}/>`,buns:`<circle cx="20" cy="20" r="13" ${F}/><circle cx="80" cy="20" r="13" ${F}/>`,pony:`<path d="M68 28Q106 14 96 66Q92 92 74 90Q90 60 68 44Z" ${F}/>`,tuft:`<circle cx="17" cy="48" r="11" ${F}/><circle cx="83" cy="48" r="11" ${F}/>`}[a.b]||"";
  const tp={spike:`<path d="M22 40L26 10L40 28L50 4L60 28L74 10L78 40Z" ${F}/>`,cap:`<path d="M19 44Q50 -6 81 44Z" ${F}/><path d="M19 44H94" fill="none"/>`,bangs:`<path d="M21 52Q18 16 50 16Q82 16 79 52L68 34L58 46L48 32L38 46L30 36Z" ${F}/>`,beard:`<path d="M24 62Q50 106 76 62Q50 72 24 62Z" fill="#fff"/>`,hat:`<path d="M26 42Q28 10 50 10Q72 10 74 42Z" ${F}/><path d="M8 44Q50 34 92 44Q50 54 8 44Z" ${F}/>`,band:`<path d="M18 36Q50 22 82 36V46Q50 32 18 46Z" fill="#ffd23f"/>`}[a.t]||"";
  const E={r:`<circle cx="39" cy="52" r="6" fill="#fff"/><circle cx="61" cy="52" r="6" fill="#fff"/><circle cx="40" cy="53" r="2" fill="${ink}" stroke="none"/><circle cx="60" cy="53" r="2" fill="${ink}" stroke="none"/>`,s:`<path d="M32 52Q39 59 46 52M54 52Q61 59 68 52" fill="none"/>`,g:`<rect x="29" y="46" width="18" height="12" rx="4" fill="#8fd3f5"/><rect x="53" y="46" width="18" height="12" rx="4" fill="#8fd3f5"/><path d="M47 51H53" fill="none"/>`,w:`<circle cx="39" cy="52" r="6" fill="#fff"/><circle cx="40" cy="53" r="2" fill="${ink}" stroke="none"/><path d="M54 53Q61 46 68 53" fill="none"/>`,x:`<path d="M33 47L45 52L33 57M67 47L55 52L67 57" fill="none"/>`,h:`<path d="M39 59L31 51Q31 44 37 46L39 48L41 46Q47 44 47 51Z" fill="#ff5a4f"/><path d="M61 59L53 51Q53 44 59 46L61 48L63 46Q69 44 69 51Z" fill="#ff5a4f"/>`}[a.e];
  const M={smile:`<path d="M38 68Q50 78 62 68" fill="none"/>`,open:`<ellipse cx="50" cy="70" rx="6" ry="7" fill="#ff5a4f"/>`,flat:`<path d="M41 70H59" fill="none"/>`,tongue:`<path d="M38 66Q50 74 62 66Z" fill="#fff"/><path d="M46 69V78Q50 82 54 78V69Z" fill="#ff5a4f"/>`,grin:`<path d="M36 66Q50 84 64 66Z" fill="#fff"/><path d="M50 68V78" fill="none"/>`,pout:`<circle cx="50" cy="70" r="4" fill="#ff5a4f"/>`}[a.m];
  return `<svg viewBox="0 0 100 100" width="${z}" height="${z}" stroke="${ink}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${bk}<circle cx="50" cy="56" r="30" fill="${SK[a.s]}"/>${tp}${E}<circle cx="29" cy="64" r="4" fill="#ff9ecb" stroke="none"/><circle cx="71" cy="64" r="4" fill="#ff9ecb" stroke="none"/>${M}</svg>`}
-J.forEach((j,i)=>j.e=av(FJ[i],34));
+JA.forEach((j,i)=>j.e=av(FJ[i],34));
 const $=s=>document.querySelector(s),app=$("#app");
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const day=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),today=()=>day(new Date());
-let S={name:"",id:"",toko:"",av:0,xp:0,hearts:5,hd:"",days:[],done:{},paham:{},log:{},miss:{},qok:{}};
+let S={name:"",id:"",toko:"",cls:"ess",vn:0,av:0,xp:0,hearts:5,hd:"",days:[],done:{},paham:{},log:{},miss:{},qok:{}};
 try{const r=localStorage.getItem("ess2");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 if(S.hd!=today()){S.hearts=5;S.hd=today()}
 if(!S.id)S.id=Math.random().toString(36).slice(2,10);
@@ -168,7 +245,8 @@ const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
 function sync(){if(!API){sst="Alamat Apps Script belum terisi. Cek file config.js.";return}if(!S.name||!S.toko){sst="Nama atau toko belum diisi.";return}
  try{fetch(API,{method:"POST",mode:"no-cors",keepalive:true,body:JSON.stringify({id:S.id,name:S.name,toko:S.toko,xp:S.xp,streak:streak(),materi:Object.keys(S.paham).length,qok:sum(S.qok),qmiss:sum(S.miss),p:pts(0),p7:pts(7)})}).then(()=>{sst="Terkirim pukul "+new Date().toLocaleTimeString("id-ID")}).catch(()=>{sst="Gagal terkirim. Cek koneksi internet."})}catch(e){sst="Gagal terkirim."}}
 function streak(){let n=0,d=new Date();if(!S.days.includes(day(d)))d.setDate(d.getDate()-1);while(S.days.includes(day(d))){n++;d.setDate(d.getDate()-1)}return n}
-const LS=[];J.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
+const LS=[];JA.forEach((j,ji)=>{const n=j.p.length,k=Math.ceil(n/4);for(let i=0;i<k;i++)LS.push({ji,i,k,cl:ji<J.length?"ess":"pk",pts:j.p.slice(Math.round(i*n/k),Math.round((i+1)*n/k))})});LS.forEach((l,x)=>l.id=x);
+const CLS={ess:{n:"ESS Journey",e:"🧭",p:"Pos",o:[6,0,7,8,1,2,3,4,9,10,5]},pk:{n:"Refreshment PK",e:"🛍️",p:"Modul",o:[11,12,13,14,15,16]}};
 const shuf=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 const QD=[
 [1,"m","Apa yang sebaiknya Rina lakukan?",["Cukup tersenyum dengan smiling eyes ke pelanggan itu","Pura-pura tidak melihat","Meninggalkan pelanggan di kasir untuk menyapa"],0,"Saat sedang melayani, cukup tersenyum. Salam lengkap menunggu sampai pelanggan sebelumnya selesai dilayani.","Rina sedang melayani pelanggan di kasir ketika seorang pelanggan baru masuk toko."],
@@ -201,46 +279,96 @@ const QD=[
 [45,"f","POP Acrylic di kasir bertuliskan “Pembelanjaan ____ jika tidak mendapatkan struk”.",["Gratis","Diskon 10%","Ditukar"],0,"POP Acrylic mengingatkan pelanggan untuk selalu meminta struk."],
 [46,"t","Area kasir boleh dipakai menaruh barang pribadi asal rapi.",null,1,"Salah. Area kasir harus bersih, rapi, bebas debu, dan bebas barang pribadi."],
 [47,"m","Salam perpisahan yang tepat?",["Hati-hati di jalan, Kak. Semoga hikingnya lancar!","Ada lagi yang mau dibeli?","Tidak mengatakan apa pun"],0,"Salam perpisahan berisi wishes tanpa info produk, misalnya “Hati-hati di jalan” atau “Sehat selalu”.","Pelanggan hendak pulang setelah membeli perlengkapan naik gunung."],
-[47,"o","Susun salam perpisahan yang benar:",["Tersenyum dengan smiling eyes","Tangan kanan di dada kiri","Sebut sapaan daerah dan nama pelanggan","Ucapkan wishes, misalnya “Hati-hati di jalan”"],0,"Senyum dan gestur lebih dulu, lalu sapaan, nama, dan wishes."]
+[47,"o","Susun salam perpisahan yang benar:",["Tersenyum dengan smiling eyes","Tangan kanan di dada kiri","Sebut sapaan daerah dan nama pelanggan","Ucapkan wishes, misalnya “Hati-hati di jalan”"],0,"Senyum dan gestur lebih dulu, lalu sapaan, nama, dan wishes."],
+[53,"f","Toko sudah buka pada pukul ____ sesuai jam operasional.",["09.00","08.00","10.00"],0,"Toko harus sudah buka pukul 09.00 sesuai jam operasional."],
+[49,"t","Lampu signage tetap wajib diperiksa pada kunjungan pagi sampai siang hari.",null,1,"Salah. Pemeriksaan lampu signage N/A untuk kunjungan pagi sampai siang."],
+[51,"m","Apa yang harus kamu pastikan?",["Window display rapi dan bersih, serta produk yang dipajang tersedia di toko","Hanya bersih, stok tidak penting","Produk pajangan boleh yang sudah habis"],0,"Window display harus jelas, rapi, bersih, dan produk yang dipajang tersedia di toko.","Kamu membuka toko dan memeriksa window display."],
+[55,"f","Suhu ruangan toko berada di kisaran 23 sampai ____ derajat.",["26","30","20"],0,"AC harus berfungsi baik dengan suhu sejuk, sekitar 23 sampai 26 derajat."],
+[60,"m","Langkah yang tepat?",["Pindahkan dus dan tangga ke area belakang agar jalur pelanggan bebas","Biarkan sementara","Tunggu Store Head menegur"],0,"Jalur pelanggan harus bebas dari dus, tangga, alat setrika, dan peralatan kebersihan.","Kamu menemukan dus kosong dan tangga di jalur jalan pelanggan."],
+[64,"t","Banner promo yang sudah kedaluwarsa boleh tetap dipajang asal masih bersih.",null,1,"Salah. Banner dan acrylic yang dipajang harus materi promo yang masih berlaku."],
+[67,"t","Lanyard yang terbalik tetap tidak masalah, asal ID card dipakai.",null,0,"Benar. Yang penting lanyard dan ID card dipakai."],
+[66,"m","Seragam yang benar untuk hari ini?",["Polo shirt hitam dan celana panjang jeans hitam","Kaos bebas dan celana robek","Jaket tanpa seragam"],0,"Karyawan baru memakai polo shirt hitam dan celana panjang jeans hitam.","Hari ini adalah hari pertama RA baru bertugas."],
+[70,"t","Rambut panjang wajib dikuncir dan poni tidak boleh menutupi mata.",null,0,"Benar. Rambut harus bersih, rapi, tidak dicat, dengan poni tidak menutupi mata."],
+[73,"m","Apa yang kamu pastikan sebelum melayani di kasir?",["Kuku pendek bersih, serta bebas bau badan, bau rokok, dan bau mulut","Hanya seragam rapi","Memakai parfum yang kuat"],0,"Grooming kasir mencakup kuku bersih dan bebas bau badan, bau rokok, dan bau mulut."],
+[75,"m","Langkah yang tepat?",["Segera isi ulang sabun dan tissue, lalu pastikan toilet bersih dan tidak berbau","Biarkan sampai ada yang komplain","Tutup toilet tanpa informasi"],0,"Toilet harus bersih, tidak berbau, dan dilengkapi tissue, sabun cair, serta tempat sampah.","Saat mengecek toilet, sabun cair habis dan tissue kosong."],
+[75,"f","Toilet harus dilengkapi tissue, sabun cair, dan ____.",["tempat sampah","parfum ruangan","cermin besar"],0,"Perlengkapan toilet: tissue, sabun cair, tempat sampah, dan semuanya berfungsi baik."],
+[104,"m","Kalimat probing yang paling tepat?",["“Rencana naik gunung ke mana, Kak, dan cuacanya dingin atau hujan?”","“Ini jaket bagus, dibeli aja.”","“Harganya segini, Kak.”"],0,"Probing menggali aktivitas, cuaca, dan tujuan pakai, bukan langsung mendorong beli.","Pelanggan mencari jaket untuk naik gunung minggu depan, tetapi terlihat ragu soal budget."],
+[102,"m","Kalimat mana yang paling tepat menggantikan “Ini jaket bagus, dibeli aja”?",["Menjelaskan fitur sesuai kebutuhan yang tadi disebut pelanggan","Mengulang kalimat yang sama dengan nada lebih meyakinkan","Menyebut harga paling murah"],0,"Hubungkan fitur dengan kebutuhan yang tadi disebut pelanggan, itulah framing benefit."],
+[105,"f","Kalimat penghubung untuk menawarkan item tambahan disebut ____ statement.",["bridging","opening","closing"],0,"Bridging menghubungkan kebutuhan pelanggan dengan item tambahan secara natural."],
+[106,"f","Di setiap transaksi, RA menawarkan minimal ____ item pelengkap.",["1","3","5"],0,"Minimal 1 item pelengkap per transaksi adalah pengungkit utama kenaikan UPT."],
+[109,"m","Pairing yang paling relevan?",["Kaos kaki khusus, gaiter, dan perawatan sepatu","Topi dan dompet","Jaket tebal saja"],0,"Untuk sepatu outdoor: kaos kaki khusus, gaiter, tas kecil, dan perawatan sepatu.","Pelanggan membeli sepatu trekking."],
+[111,"m","Kaos yang cocok dipadukan dengan item utama berwarna merah?",["Putih, abu-abu, atau hitam","Merah lain","Oranye terang"],0,"Item merah cocok dengan kaos putih, abu-abu, atau hitam."],
+[114,"t","Untuk item utama hitam, topi berwarna hitam adalah pilihan paling aman.",null,0,"Benar. Hitam netral, dan topi hitam paling aman."],
+[116,"o","Susun 4 langkah handling stok kosong:",["Konfirmasi dan empati dengan jujur","Gali ulang kebutuhan pelanggan","Tawarkan model lain yang setara","Tawarkan alternatif lanjutan (pre-order, cek stok UPT lain, follow-up restock)"],0,"Mulai dari empati, gali kebutuhan, tawarkan model lain, baru alternatif lanjutan."],
+[118,"m","Respons yang tepat?",["Gali ulang aktivitasnya, lalu tawarkan model setara dengan penjelasan jujur","Bilang habis dan selesai","Paksa pilih model apa saja"],0,"Stok kosong bukan berarti transaksi hilang, arahkan ke alternatif yang relevan.","Sepatu yang dicari pelanggan tidak tersedia."],
+[120,"t","Saat pelanggan bilang “cuma lihat-lihat”, RA sebaiknya meninggalkannya begitu saja.",null,1,"Salah. Tetap dampingi dengan jarak wajar dan tawarkan info tanpa memaksa."],
+[121,"f","Gunakan pertanyaan ____ seperti “Lagi cari untuk kebutuhan apa, Kak?”",["terbuka","tertutup","menghakimi"],0,"Pertanyaan terbuka mengajak pelanggan bercerita tentang kebutuhannya."],
+[124,"m","Respons yang tepat?",["Jelaskan value jangka panjang: durability, garansi, dan teknologi","Turunkan harga sendiri","Bilang “ya memang segitu”"],0,"Objection harga dijawab dengan value jangka panjang.","Pelanggan berkata, “Mahal dibanding brand lain.”"],
+[129,"m","Contoh alternative close yang benar?",["“Yang warna hitam atau navy, Kak?”","“Mau beli nggak?”","“Nanti saja ya.”"],0,"Alternative close memberi 2 pilihan yang keduanya mengarah ke pembelian."],
+[133,"m","Respons closing paling tepat?",["Jelaskan value teknologi jaket, info bundling aktif, lalu assumptive close ukuran","“Iya emang segini harganya, Kak.”","Diam menunggu pelanggan memutuskan"],0,"Gabungkan value, bundling, dan assumptive close.","Pelanggan sudah mencoba jaket dan berkata, “Bagus sih, tapi mahal ya.”"],
+[3,"v","Rekam Voice Note (maksimal 60 detik): bagaimana kamu menyambut pelanggan tersebut?",null,0,"Salam “Selamat Datang di EIGER” dengan senyum dan sapaan daerah; beri ruang; setelah sekitar 3 menit tawarkan bantuan; tanya kegiatan yang akan dilakukan.","Seorang pelanggan masuk toko sendirian dan mulai melihat-lihat rak sepatu. Kamu baru selesai melayani pelanggan lain."],
+[8,"v","Rekam Voice Note (maksimal 60 detik): apa yang kamu ucapkan kepada pelanggan?",null,0,"Empati dan jujur; tawarkan alternatif warna atau model yang sesuai kebutuhan; jelaskan keunggulannya spontan; tidak berhenti di kata “habis”.","Pelanggan mencari tas daypack warna hijau untuk hiking akhir pekan, tetapi warna itu sedang kosong."],
+[37,"v","Rekam Voice Note (maksimal 60 detik): bagaimana kamu menjelaskan ke pelanggan?",null,0,"Minta maaf; gunakan harga yang lebih rendah; jelaskan dengan tenang dan sopan; lanjutkan transaksi dengan ramah.","Di kasir, price tag tertulis Rp199.000 tetapi di POS tertulis Rp219.000, dan pelanggan menyadarinya."],
+[105,"v","Rekam Voice Note (maksimal 60 detik): ucapkan script probing dan bridging yang akan kamu gunakan.",null,0,"Sapaan natural; 2 sampai 3 pertanyaan probing (aktivitas, cuaca, durasi, budget); fitur dijelaskan sebagai benefit; bridging ke item tambahan; tidak memaksa.","Pelanggan mencari jaket untuk naik gunung minggu depan, tetapi terlihat ragu soal budget."],
+[110,"v","Rekam Voice Note (maksimal 60 detik): bagaimana kamu menawarkan pairing secara natural?",null,0,"Hubungkan dengan kebutuhan (hujan, perjalanan); sebut rain cover, botol minum, atau jaket ringan; minimal 1 item pelengkap; nada ramah, tidak memaksa.","Pelanggan sudah memilih sebuah daypack 25 liter dan hendak ke kasir."],
+[115,"v","Rekam Voice Note (maksimal 60 detik): berikan rekomendasi padu padan OOTD-mu.",null,0,"Sebut warna kaos, celana, dan topi yang cocok sesuai panduan; beri alasan singkat; terdengar meyakinkan, bukan asal tebak.","Pelanggan memilih jaket berwarna navy dan bingung harus memadukannya dengan apa."],
+[119,"v","Rekam Voice Note (maksimal 60 detik): bagaimana respons lengkapmu?",null,0,"Empati dan jujur; gali ulang kebutuhan; tawarkan model setara beserta perbedaannya; tawarkan pre-order, cek stok UPT lain, atau follow-up restock.","Pelanggan mencari jaket hitam ukuran M, tetapi stoknya kosong."],
+[127,"v","Rekam Voice Note (maksimal 60 detik): bagaimana kamu merespons?",null,0,"Tidak menekan; informasi promo atau stok terbatas secara jujur; urgensi wajar; tinggalkan kesan positif dan tawarkan kembali.","Pelanggan berkata, “Nanti aja deh belinya.”"],
+[133,"v","Rekam Voice Note (maksimal 60 detik): ucapkan closing-mu.",null,0,"Jelaskan value teknologi; sebut bundling yang aktif; tutup dengan assumptive close ukuran; nada percaya diri, tidak memaksa.","Pelanggan sudah mencoba jaket dan ragu soal harga, sementara ada bundling jaket dan kaos yang sedang aktif."]
+
 ];
-const QB=QD.map(r=>({p:r[0],t:r[1],q:r[2],o:r[3],a:r[4],w:r[5],s:r[6],ji:ALL.find(x=>x.no==r[0]).j,li:LS.findIndex(l=>l.pts.some(z=>z[0]==r[0]))}));
+const ALA=JA.flatMap((j,i)=>j.p.map(p=>({no:p[0],j:i})));
+const QB=QD.map(r=>({p:r[0],t:r[1],q:r[2],o:r[3],a:r[4],w:r[5],s:r[6],ji:ALA.find(x=>x.no==r[0]).j,li:LS.findIndex(l=>l.pts.some(z=>z[0]==r[0]))}));
 
 let tab="path",L=null,shift="Pagi";
 const hero=()=>`<div class="hero"><svg viewBox="0 0 400 210" preserveAspectRatio="xMidYMax slice" stroke="${ink}" stroke-width="3" stroke-linejoin="round"><rect width="400" height="210" fill="#8fd3f5" stroke="none"/><circle cx="330" cy="50" r="22" fill="#ffd23f"/><path d="M0 150 Q80 100 170 140 T400 125 V210 H0Z" fill="#6fcf7a"/><path d="M0 185 Q120 145 240 178 T400 168 V210 H0Z" fill="#3fbf6b"/><path d="M55 172 L90 124 L125 172Z" fill="#ff9a5c"/><path d="M90 124 V172" fill="none"/><path d="M325 172 L348 118 L371 172Z" fill="#2f8f4e"/><path d="M292 174 L310 134 L328 174Z" fill="#2f8f4e"/></svg><div class="hi"><div><small>Selamat datang,</small><h1>Halo, ${esc(S.name||"RA")}!</h1></div><button class="avb" onclick="tab='me';render()">${av(S.av,56)}</button></div><div class="chips"><b class="nb chip">🔥 ${streak()}</b><b class="nb chip">⚡ ${S.xp}</b><b class="nb chip">❤ ${S.hearts}</b></div></div>`;
-function path(){const cur=LS.findIndex(l=>!S.done[l.id]);let h=hero()+"<main>",last=-1;
- LS.forEach(l=>{if(l.ji!=last){last=l.ji;h+=`<div class="nb ban" style="background:${C[l.ji]}"><span>${J[l.ji].e}</span><div><small>Pos ${l.ji+1}</small><b>${J[l.ji].n}</b></div></div>`}
- const st=S.done[l.id]?"done":l.id==cur?"cur":"lock",off=Math.round(Math.sin(l.id*1.1)*56);
- h+=`<div class="nd" style="transform:translateX(${off}px)">${st=="cur"?'<i class="go">MULAI</i>':""}<button class="nb node ${st}" style="--c:${C[l.ji]}" ${st=="lock"?"disabled":""} onclick="start(${l.id})">${st=="done"?"★":st=="lock"?"🔒":av(FJ[l.ji],56)}</button></div>`});
- return h+(cur<0?`<div class="nb card" style="background:var(--yel)"><h2>🏆 Semua pos selesai!</h2>Ulangi pos mana saja untuk latihan.</div>`:"")+"</main>"}
+function path(){const O=CLS[S.cls].o,ls=LS.filter(l=>l.cl==S.cls).sort((a,b)=>O.indexOf(a.ji)-O.indexOf(b.ji)||a.id-b.id),cur=ls.findIndex(l=>!S.done[l.id]);
+ let h=hero()+`<main><div class="clsb">${Object.entries(CLS).map(([k,c])=>{const t=LS.filter(l=>l.cl==k),d=t.filter(l=>S.done[l.id]).length;return `<button class="nb btn cl ${k==S.cls?"on":""}" onclick="S.cls='${k}';save();render();scrollTo(0,0)"><span>${c.e}</span><b>${c.n}</b><small>${d}/${t.length} pelajaran</small></button>`}).join("")}</div>`,last=-1;
+ ls.forEach((l,x)=>{if(l.ji!=last){last=l.ji;h+=`<div class="nb ban" style="background:${C[l.ji%6]}"><span>${JA[l.ji].e}</span><div><small>${CLS[S.cls].p} ${O.indexOf(l.ji)+1}</small><b>${JA[l.ji].n}</b></div></div>`}
+ const st=S.done[l.id]?"done":x==cur?"cur":"lock",off=Math.round(Math.sin(x*1.1)*56);
+ h+=`<div class="nd" style="transform:translateX(${off}px)">${st=="cur"?'<i class="go">MULAI</i>':""}<button class="nb node ${st}" style="--c:${C[l.ji%6]}" ${st=="lock"?"disabled":""} onclick="start(${l.id})">${st=="done"?"★":st=="lock"?"🔒":av(FJ[l.ji],56)}</button></div>`});
+ return h+(cur<0?`<div class="nb card" style="background:var(--yel)"><h2>🏆 Semua selesai di class ini!</h2>Pilih class lain atau ulangi pelajaran untuk latihan.</div>`:"")+"</main>"}
 function start(id){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}L={l:LS[id],s:0,a:null,xp:0,qs:QB.filter(q=>q.li==id)};lesson()}
-function tutup(){L=null;$("#ov").hidden=true;render()}
+function tutup(){stopRec();L=null;$("#ov").hidden=true;render()}
 function lesson(){const l=L.l,n=l.pts.length,tot=n+L.qs.length;if(L.s>=tot)return fin();
  let body,foot="";
  if(L.s<n){const p=l.pts[L.s];S.paham[p[0]]=1;body=`<div class="say">${av(S.av,96)}<div class="nb bub">${p[1]}</div></div>`;foot=`<button class="nb btn big" style="background:var(--grn)" onclick="L.s++;lesson()">PAHAM, LANJUT</button>`}
- else{const q=L.qs[L.s-n],tp={m:"Pilihan ganda",t:"Benar atau salah",o:"Susun urutan",f:"Lengkapi kalimat"}[q.t],done=L.a!==null,op=q.t=="t"?["Benar","Salah"]:q.o;
-  if(L.sq!==L.s){L.sq=L.s;L.o=[];L.sh=q.t=="t"?[0,1]:shuf(q.o.map((_,i)=>i))}
-  body=`<span class="qt">${q.s?"Soal cerita":tp}</span>${q.s?`<div class="nb bub" style="font-size:16px;background:var(--yel);margin-bottom:12px">📖 ${q.s}</div>`:""}<h3>${q.q}</h3>`;
-  if(q.t=="o"){body+=`<div class="nb card" style="min-height:60px">${L.o.length?L.o.map((i,k)=>`<div>${k+1}. ${q.o[i]}</div>`).join(""):"<small>Ketuk langkah sesuai urutan yang benar</small>"}</div>`+L.sh.filter(i=>!L.o.includes(i)).map(i=>`<button class="nb opt" ${done?"disabled":""} onclick="L.o.push(${i});lesson()">${q.o[i]}</button>`).join("");
+ else{const q=L.qs[L.s-n],tp={m:"Pilihan ganda",t:"Benar atau salah",o:"Susun urutan",f:"Lengkapi kalimat",v:"Voice note 🎙️"}[q.t],done=L.a!==null,op=q.t=="t"?["Benar","Salah"]:q.o,v=q.t=="v";
+  if(L.sq!==L.s){L.sq=L.s;L.o=[];L.vu=null;L.rc=0;L.sent=0;L.sh=q.t=="t"?[0,1]:v?[]:shuf(q.o.map((_,i)=>i))}
+  body=`<span class="qt">${q.s&&!v?"Soal cerita":tp}</span>${q.s?`<div class="nb bub" style="font-size:16px;background:var(--yel);margin-bottom:12px">📖 ${q.s}</div>`:""}<h3>${q.q}</h3>`;
+  if(v){if(!done)foot=L.rc?`<button class="nb btn big" style="background:var(--red);color:#fff" onclick="stopRec()">■ BERHENTI · <span id="vs">${L.sec||0}</span> dtk</button>`:L.vu?`<audio controls src="${L.vu}" style="width:100%"></audio><div style="display:flex;gap:10px;margin-top:8px"><button class="nb btn big" onclick="L.vu=null;lesson()">ULANG</button><button class="nb btn big" style="background:var(--grn)" onclick="sendVN()">KIRIM</button></div>`:`<button class="nb btn big" style="background:var(--red);color:#fff" onclick="rec0()">🎙️ MULAI REKAM</button><button class="nb btn big" style="margin-top:8px" onclick="skipVN()">Lewati</button>`}
+  else if(q.t=="o"){body+=`<div class="nb card" style="min-height:60px">${L.o.length?L.o.map((i,k)=>`<div>${k+1}. ${q.o[i]}</div>`).join(""):"<small>Ketuk langkah sesuai urutan yang benar</small>"}</div>`+L.sh.filter(i=>!L.o.includes(i)).map(i=>`<button class="nb opt" ${done?"disabled":""} onclick="L.o.push(${i});lesson()">${q.o[i]}</button>`).join("");
    if(done&&!L.ok)body+=`<div class="nb card" style="background:#b9f0c9"><b>Urutan yang benar:</b>${q.o.map((x,k)=>`<div>${k+1}. ${x}</div>`).join("")}</div>`;
    if(!done)foot=`<div style="display:flex;gap:10px"><button class="nb btn big" onclick="L.o=[];lesson()">ULANG</button><button class="nb btn big" style="background:var(--grn)" ${L.o.length<q.o.length?"disabled":""} onclick="chk2()">PERIKSA</button></div>`}
   else body+=L.sh.map(i=>`<button class="nb opt ${!done?"":i==q.a?"r":i==L.a?"w":""}" ${done?"disabled":""} onclick="pick(${i})">${op[i]}</button>`).join("");
-  if(done)foot=`<div class="fb ${L.ok?"r":"w"}"><b>${L.ok?"Mantap! 🎉":"Belum tepat"}</b><p>${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
+  if(done)foot=`<div class="fb ${v||L.ok?"r":"w"}"><b>${v?(L.sent?"Voice note terkirim! 🎉":"Dilewati"):(L.ok?"Mantap! 🎉":"Belum tepat")}</b><p>${v?"<b>Yang dinilai Store Head:</b> ":""}${q.w}</p><button class="nb btn big" onclick="L.s++;L.a=null;lesson()">LANJUT</button></div>`}
  $("#ov").hidden=false;$("#ov").innerHTML=`<div class="top"><button class="x" onclick="tutup()">✕</button><div class="pb"><i style="width:${L.s/tot*100}%"></i></div><b>❤ ${S.hearts}</b></div><div class="bd">${body}</div><div class="ft">${foot}</div>`}
 function rec(ok){const j=L.l.ji;if(ok){L.xp+=10;S.qok[j]=(S.qok[j]||0)+1}else{S.hearts=Math.max(0,S.hearts-1);S.miss[j]=(S.miss[j]||0)+1}L.ok=ok;save()}
 function pick(i){const q=L.qs[L.s-L.l.pts.length];L.a=i;rec(i==q.a);lesson()}
 function chk2(){L.a=1;rec(L.o.every((v,k)=>v==k));lesson()}
+let mr=null,vb=null,vt=null;
+async function rec0(){try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),mt=["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"",ch=[];
+ mr=new MediaRecorder(st,mt?{mimeType:mt,audioBitsPerSecond:24000}:{audioBitsPerSecond:24000});mr.ondataavailable=e=>ch.push(e.data);
+ mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearInterval(vt);vb=new Blob(ch,{type:mr.mimeType||mt||"audio/mp4"});L.vu=URL.createObjectURL(vb);L.rc=0;lesson()};
+ mr.start();L.rc=1;L.sec=0;vt=setInterval(()=>{L.sec++;const e=$("#vs");if(e)e.textContent=L.sec;if(L.sec>=60)stopRec()},1000);lesson()}
+ catch(e){alert("Mikrofon tidak bisa diakses. Izinkan mikrofon di pengaturan browser, atau pilih Lewati.")}}
+function stopRec(){if(mr&&mr.state=="recording")mr.stop()}
+function skipVN(){L.a=1;L.sent=0;lesson()}
+function sendVN(){const q=L.qs[L.s-L.l.pts.length],r=new FileReader();r.onload=()=>{
+ if(API&&S.name){try{fetch(API,{method:"POST",mode:"no-cors",body:JSON.stringify({type:"vn",id:S.id,name:S.name,toko:S.toko,cls:L.l.cl,ji:L.l.ji,cs:q.s||"",soal:q.q,rub:q.w,dur:L.sec||0,mime:vb.type,audio:String(r.result).split(",")[1],waktu:new Date().toISOString()})})}catch(e){}}
+ S.vn=(S.vn||0)+1;L.xp+=15;L.a=1;L.sent=1;save();lesson()};r.readAsDataURL(vb)}
 function fin(){const l=L.l,pr=l.id<0,xp=pr?L.xp:S.done[l.id]?5:20+L.xp;S.xp+=xp;if(!pr)S.done[l.id]=1;if(!S.days.includes(today()))S.days.push(today());save();
- $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`Pos ${l.ji+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="tutup()">KEMBALI KE JALUR</button></div>`}
+ $("#ov").innerHTML=`<div class="bd c"><div class="bounce">${av(S.av,140)}</div><h2>${pr?"Latihan selesai!":`${CLS[l.cl].p} ${CLS[l.cl].o.indexOf(l.ji)+1} · ${l.i+1}/${l.k} selesai!`}</h2><div class="nb chip">⚡ +${xp} XP</div><div class="nb chip">🔥 ${streak()} hari beruntun</div></div><div class="ft"><button class="nb btn big" style="background:var(--yel)" onclick="tutup()">KEMBALI KE JALUR</button></div>`}
 const avGrid=()=>`<div class="gr">${AV.map((a,i)=>`<button class="${i==S.av?"sel":""}" onclick="setAv(${i})">${av(i,52)}</button>`).join("")}</div>`;
 function setAv(i){S.av=i;save();if(!$("#ov").hidden&&!L)onb();else render()}
 function onb(){$("#ov").hidden=false;$("#ov").innerHTML=`<div class="bd c"><h2>Selamat datang di<br>ESS Camp ⛺</h2><p>Pilih karaktermu, lalu isi nama dan tokomu.</p>${avGrid()}<input class="nb inp" placeholder="Nama kamu" value="${esc(S.name)}" oninput="S.name=this.value"><input class="nb inp" placeholder="Nama toko (contoh: EIGER Semarang)" value="${esc(S.toko||"")}" oninput="S.toko=this.value"></div><div class="ft"><button class="nb btn big" style="background:var(--lime)" onclick="if(S.name.trim()&&(S.toko||'').trim()){S.name=S.name.trim();S.toko=S.toko.trim();save();$('#ov').hidden=true;render()}">MULAI PETUALANGAN</button></div>`}
 function me(){const n=["M","S","S","R","K","J","S"],d=new Date();d.setDate(d.getDate()-6);let w="";
  for(let i=0;i<7;i++){w+=`<div class="${S.days.includes(day(d))?"on":""}">${n[d.getDay()]}<b>${S.days.includes(day(d))?"⚡":""}</b></div>`;d.setDate(d.getDate()+1)}
- const pr=J.map((j,i)=>{const t=LS.filter(l=>l.ji==i),k=t.filter(l=>S.done[l.id]).length;return `<div>${j.e} ${j.n}<div class="pg"><i style="width:${k/t.length*100}%;background:${C[i]}"></i></div></div>`}).join("");
+ const pr=J.map((j,i)=>{const t=LS.filter(l=>l.ji==i),k=t.filter(l=>S.done[l.id]).length;return `<div>${j.e} ${j.n}<div class="pg"><i style="width:${k/t.length*100}%;background:${C[i%6]}"></i></div></div>`}).join("");
  return `<main><div class="nb card" style="background:var(--yel)"><div class="row"><h2>Streak ${streak()} hari 🔥</h2><b>⚡ ${S.xp} XP</b></div><div class="wk">${w}</div></div><div class="nb card"><h3>Progres pos</h3>${pr}<small>${Object.keys(S.paham).length} dari ${ALL.length} poin sudah dipelajari</small></div><div class="nb card"><h3>Ganti karakter</h3>${avGrid()}<input class="nb inp" value="${esc(S.name)}" oninput="S.name=this.value;save()"><input class="nb inp" placeholder="Nama toko" value="${esc(S.toko||"")}" oninput="S.toko=this.value;save()"></div><div class="nb card"><b>Sinkron ke supervisor</b><br><small id="sst">${sst||"Belum dikirim"}</small><button class="nb btn big" style="background:var(--sky);margin-top:8px" onclick="sync();setTimeout(()=>{$('#sst').textContent=sst},1500)">Kirim data sekarang</button></div><button class="nb btn big" style="background:#fff" onclick="if(confirm('Hapus semua progres?')){localStorage.removeItem('ess2');location.reload()}">Reset progres</button></main>`}
 function chk(){const k=today()+"|"+shift,D=S.log[k]||{};let ok=0,x=0;ALL.forEach(p=>{if(D[p.no]=="ok")ok++;if(D[p.no]=="x")x++});
  let h=`<main><div class="seg">${["Pagi","Siang"].map(s=>`<button class="nb btn ${s==shift?"on":""}" onclick="shift='${s}';render()">Shift ${s}</button>`).join("")}</div><div class="nb card" style="background:var(--lime)"><small>Skor shift (N/A tidak dihitung)</small><h2 style="font-size:34px;margin:0">${ok+x?Math.round(ok/(ok+x)*100)+"%":"–"}</h2>${ok} OK · ${x} terlewat</div>`;
- J.forEach((j,i)=>{h+=`<h3>${j.e} ${i+1}. ${j.n}</h3>`;ALL.filter(p=>p.j==i).forEach(p=>{const v=D[p.no];h+=`<div class="nb card"><div>${p.no}. ${p.t}</div><div class="st">${[["ok","OK"],["x","Terlewat"],["na","N/A"]].map(b=>`<button class="${b[0]} ${v==b[0]?"on":""}" onclick="lg(${p.no},'${b[0]}')">${b[1]}</button>`).join("")}</div></div>`})});
+ CLS.ess.o.forEach((i,x)=>{const j=J[i];h+=`<h3>${j.e} ${x+1}. ${j.n}</h3>`;ALL.filter(p=>p.j==i).forEach(p=>{const v=D[p.no];h+=`<div class="nb card"><div>${p.no}. ${p.t}</div><div class="st">${[["ok","OK"],["x","Terlewat"],["na","N/A"]].map(b=>`<button class="${b[0]} ${v==b[0]?"on":""}" onclick="lg(${p.no},'${b[0]}')">${b[1]}</button>`).join("")}</div></div>`})});
  return h+"</main>"}
 function lg(n,v){const k=today()+"|"+shift;S.log[k]=S.log[k]||{};S.log[k][n]==v?delete S.log[k][n]:S.log[k][n]=v;save();const y=scrollY;render();scrollTo(0,y)}
 const ic=(b)=>`<svg viewBox="0 0 40 40" width="30" height="30" stroke="${ink}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">${b}</svg>`;
@@ -253,8 +381,8 @@ function nav(){const it=[["dash","Dasbor"],["chk","Checklist"],["path","Jalur"],
  $("nav").innerHTML=it.map(([t,l])=>t=="path"?`<button class="mid ${tab==t?"on":""}" data-t="${t}"><span class="bw">${BLOB}${IC.home}</span><b>${l}</b></button>`:`<button class="${tab==t?"on":""}" data-t="${t}">${t=="me"?av(S.av,30):IC[t]}<b>${l}</b></button>`).join("");
  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.t=="prac")return prac();tab=b.dataset.t;scrollTo(0,0);render()})}
 function prac(){if(S.hearts<1){alert("Hati habis hari ini. Kembali besok ya!");return}
- const sc=J.map((j,i)=>[i,(S.miss[i]||0)-(S.qok[i]||0)*.5+Math.random()]).sort((a,b)=>b[1]-a[1]);
- const j=sc[0][0];L={l:{ji:j,i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0,qs:shuf(QB.filter(q=>q.ji==j)).slice(0,3)};lesson()}
+ const sc=JA.map((j,i)=>[i,(S.miss[i]||0)-(S.qok[i]||0)*.5+Math.random()]).sort((a,b)=>b[1]-a[1]);
+ const j=sc[0][0];L={l:{ji:j,i:0,k:1,pts:[],id:-1},s:0,a:null,xp:0,qs:shuf(QB.filter(q=>q.ji==j&&q.t!="v")).slice(0,3)};lesson()}
 let rng=7;
 function stats(r=rng){const d=new Date();d.setDate(d.getDate()-6);const lo=day(d),P={};ALL.forEach(p=>P[p.no]={ok:0,x:0});
  for(const k in S.log){if(r&&k.split("|")[0]<lo)continue;for(const n in S.log[k]){const v=S.log[k][n];if(P[n]&&(v=="ok"||v=="x"))P[n][v]++}}return P}

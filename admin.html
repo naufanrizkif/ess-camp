@@ -30,7 +30,7 @@ header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-
 .ra{border-bottom:2px dashed #cfc9f0;padding:8px 0}.ra summary{display:flex;gap:10px;align-items:center;cursor:pointer;list-style:none}.ra summary div{flex:1;min-width:0}.ra b{display:block}
 .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;border:3px solid var(--ink)}.chip{border:2px solid var(--ink);border-radius:10px;padding:1px 9px;font-weight:800;font-size:12px}
 .dt{background:#f4f2ff;border:2px solid var(--ink);border-radius:12px;padding:10px;margin-top:8px;font-size:12px}.dt div{margin-top:5px}
-.cm{background:#fff1f5;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);border-radius:12px;padding:8px 10px;margin-top:8px;font-size:12px}.cm b{display:block}
+.cm{background:#fff1f5;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);border-radius:12px;padding:8px 10px;margin-top:8px;font-size:12px}.cm b{display:block}.mini{border:3px solid #1b1b1b;background:var(--yel);border-radius:12px;padding:7px 12px;font-weight:900;cursor:pointer;box-shadow:2px 2px 0 #1b1b1b}
 #msg{margin-bottom:10px;color:#c8452d}h3{margin:18px 0 8px;font-size:15px}
 .ov2{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:50;padding:16px}.ov2[hidden],.shell[hidden]{display:none}
 .gc{background:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);border-radius:28px;padding:28px;width:100%;max-width:380px;text-align:center}.gc.wide{max-width:640px}.gc h2{margin:0 0 6px;font-size:26px}
@@ -64,9 +64,9 @@ const sc=o=>{let a=0,b=0;for(const n in o){a+=o[n][0];b+=o[n][1]}return a+b?Math
 const ago=t=>{const m=(Date.now()-pw(t))/6e4;return m<60?Math.round(m)+" mnt lalu":m<1440?Math.round(m/60)+" jam lalu":Math.round(m/1440)+" hari lalu"};
 const si=d=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const go=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
-$("#sd").innerHTML=`<span class="logo">ESS</span>`+[["showMenu()","b0","Menu",'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>'],["setMode('ess')","b1","ESS Camp",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],["setMode('svy')","b2","Service Excellence",'<path d="M12 3l2.8 5.9 6.2.8-4.6 4.3 1.2 6.3L12 17.3 6.4 20.3l1.2-6.3L3 9.7l6.2-.8z"/>']].map(x=>`<button id="${x[1]}" onclick="${x[0]}">${si(x[3])}<span>${x[2]}</span></button>`).join("")+`<button class="last" onclick="sessionStorage.clear();location.reload()">${si('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>')}<span>Kunci</span></button>`;
+$("#sd").innerHTML=`<span class="logo">ESS</span>`+[["showMenu()","b0","Menu",'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>'],["setMode('ess')","b1","ESS Camp",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],["setMode('svy')","b2","Service Excellence",'<path d="M12 3l2.8 5.9 6.2.8-4.6 4.3 1.2 6.3L12 17.3 6.4 20.3l1.2-6.3L3 9.7l6.2-.8z"/>'],["setMode('vn')","b3","Voice Note",'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v4"/>']].map(x=>`<button id="${x[1]}" onclick="${x[0]}">${si(x[3])}<span>${x[2]}</span></button>`).join("")+`<button class="last" onclick="sessionStorage.clear();location.reload()">${si('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>')}<span>Kunci</span></button>`;
 function pw(t){if(typeof t=="string"){const m=t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?/);if(m)return new Date(+m[3],m[2]-1,+m[1],+m[4],+m[5],+(m[6]||0))}return new Date(t)}
-let SD=[],mode="ess",srng=7;
+let SD=[],VN=[],mode="ess",srng=7;const ordf=()=>J.length>10?[6,0,7,8,1,2,3,4,9,10,5]:J.map((_,i)=>i);
 async function getJ(){if(J.length)return;const t=await(await fetch("index.html")).text();J=new Function(t.match(/const J=\[[\s\S]*?\n(?=const Q=)/)[0]+";return J")();J.forEach((j,i)=>j.p.forEach(p=>ALL[p[0]]={t:p[1],j:i}))}
 async function fsrc(pin,src){const r=await fetch(API+"?pin="+encodeURIComponent(pin)+"&src="+src);return JSON.parse(await r.text())}
 async function login(){const m=$("#gm"),pin=$("#gp").value;m.textContent="Memeriksa…";
@@ -75,12 +75,21 @@ async function login(){const m=$("#gm"),pin=$("#gp").value;m.textContent="Memeri
  catch(e){m.textContent=API?"Gagal terhubung ke Apps Script. Periksa URL di config.js, akses (Anyone), dan versi deploy terbaru.":"config.js belum berisi URL Apps Script."}}
 function showMenu(){$("#gate").hidden=true;$("#sh").hidden=true;$("#menu").hidden=false}
 async function openDash(){$("#menu").hidden=true;$("#sh").hidden=false;$("#msg").textContent="Memuat…";{const h=new Date().getHours();$("#hi").textContent="Selamat "+(h<11?"pagi":h<15?"siang":h<18?"sore":"malam")+"!"}
- try{const pin=sessionStorage.getItem("pin")||"";await getJ();const[x,y]=await Promise.all([fsrc(pin,"ess"),fsrc(pin,"survey")]);D=Array.isArray(x)?x:[];SD=Array.isArray(y)?y:[];$("#msg").textContent="";
+ try{const pin=sessionStorage.getItem("pin")||"";await getJ();const[x,y,z]=await Promise.all([fsrc(pin,"ess"),fsrc(pin,"survey"),fsrc(pin,"vn")]);D=Array.isArray(x)?x:[];SD=Array.isArray(y)?y:[];VN=Array.isArray(z)?z:[];$("#msg").textContent="";
   const ts=[...new Set(D.map(r=>r.toko))].sort();$("#tk").innerHTML='<option value="">Semua toko</option>'+ts.map(t=>`<option>${esc(t)}</option>`).join("");setMode(mode)}
  catch(e){$("#msg").textContent="Gagal memuat data. Pastikan Apps Script sudah dideploy ulang dengan versi terbaru."}}
 function setMode(m){mode=m;if($("#sh").hidden)return;document.querySelectorAll(".es").forEach(e=>e.hidden=m!="ess");document.querySelectorAll(".sv").forEach(e=>e.hidden=m!="svy");
- $("#b1").classList.toggle("on",m=="ess");$("#b2").classList.toggle("on",m=="svy");$("#sub").textContent=m=="ess"?"ESS Camp":"Service Excellence";render()}
-function render(){mode=="ess"?draw():drawS()}
+ $("#b1").classList.toggle("on",m=="ess");$("#b2").classList.toggle("on",m=="svy");$("#b3").classList.toggle("on",m=="vn");$("#sub").textContent={ess:"ESS Camp",svy:"Service Excellence",vn:"Voice Note"}[m];render()}
+function drawV(){const R=VN.map((v,i)=>({...v,i})).filter(v=>!q||String(v.name).toLowerCase().includes(q)).sort((x,y)=>pw(y.waktu)-pw(x.waktu));
+ $("#ch").innerHTML=chips([["Voice note",R.length,"yel"],["Belum dinilai",R.filter(v=>!v.skor).length,"pink"],["Sudah dinilai",R.filter(v=>v.skor).length,"lime"]]);
+ $("#out").innerHTML=R.length?R.map(v=>`<div class="rt" style="margin-bottom:14px"><div class="row"><b>${esc(v.name)} <small>· ${esc(v.toko)}</small></b><span class="pill">${v.skor?v.skor+"/5":"Belum dinilai"}</span></div><small>${ago(v.waktu)} · ${v.dur} dtk · ${v.cls=="pk"?"Refreshment PK":"ESS Journey"}</small>
+ <div class="cm" style="background:#fff7d6"><b>Studi kasus</b>${esc(v.cs)}<br><b>Tugas</b>${esc(v.soal)}</div><div class="cm" style="background:#e8f7e0"><b>Yang dinilai</b>${esc(v.rub)}</div>
+ <div id="au${v.i}" style="margin:8px 0"><button class="mini" onclick="playV(${v.i})">▶ Putar voice note</button></div>
+ <div class="row"><select id="sk${v.i}">${[1,2,3,4,5].map(n=>`<option ${v.skor==n?"selected":""}>${n}</option>`).join("")}</select><input id="nt${v.i}" placeholder="Catatan untuk RA" value="${esc(v.catatan||"")}" style="flex:1;border:3px solid #1b1b1b;border-radius:12px;padding:7px 10px"><button class="mini" onclick="saveV(${v.i})">Simpan nilai</button></div></div>`).join(""):`<div class="rt">Belum ada voice note masuk. RA mengirimnya dari soal Voice Note di ESS Camp.</div>`;
+ $("#rt").innerHTML=""}
+async function playV(i){const b=$("#au"+i);b.textContent="Memuat audio…";try{const r=await fetch(API+"?pin="+encodeURIComponent(sessionStorage.getItem("pin")||"")+"&src=vnfile&fid="+encodeURIComponent(VN[i].fid)),d=await r.json();b.innerHTML=`<audio controls autoplay src="data:${d.mime};base64,${d.b64}" style="width:100%"></audio>`}catch(e){b.textContent="Gagal memuat audio."}}
+function saveV(i){const v=VN[i];v.skor=+$("#sk"+i).value;v.catatan=$("#nt"+i).value;try{fetch(API,{method:"POST",mode:"no-cors",body:JSON.stringify({type:"vnscore",fid:v.fid,skor:v.skor,catatan:v.catatan})})}catch(e){}drawV()}
+function render(){mode=="ess"?draw():mode=="svy"?drawS():drawV()}
 function chart2(v,lb,mx,fm){const n=v.length,xs=i=>n>1?50+i*500/(n-1):300,ys=x=>135-(x||0)/mx*115,em=t=>`<svg viewBox="0 0 600 180" width="100%"><text x="300" y="90" text-anchor="middle" fill="#1b1b1b">${t}</text></svg>`;let low=-1;v.forEach((x,i)=>{if(x!==null&&(low<0||x<v[low]))low=i});
  if(low<0)return em("Belum ada data pada rentang ini");if(n<2)return em("Butuh data minimal 2 hari");
  let d="M"+xs(0)+" "+ys(v[0]);for(let i=1;i<n;i++){const m=(xs(i-1)+xs(i))/2;d+=`C${m} ${ys(v[i-1])} ${m} ${ys(v[i])} ${xs(i)} ${ys(v[i])}`}
@@ -106,20 +115,20 @@ function exportX(){const E=sflt();if(!E.length){alert("Belum ada data untuk di-e
  const ws=XLSX.utils.json_to_sheet(E.sort((x,y)=>pw(x.waktu)-pw(y.waktu)).map(e=>({"Tanggal & Waktu":pw(e.waktu).toLocaleString("id-ID"),"Cabang":e.cabang,"Retail Assistant":e.ra,"Rating":e.rating,"Kesan yang Dipilih":e.tags.map(i=>TL[i]||i).join("; "),"Saran / Masukan":e.komentar||""}))),wb=XLSX.utils.book_new();
  XLSX.utils.book_append_sheet(wb,ws,"Rekap Survey");XLSX.writeFile(wb,`rekap-survey-service-${new Date().toISOString().slice(0,10)}.xlsx`)}
 try{if(sessionStorage.getItem("pin")){$("#gate").hidden=true;location.hash=="#dash"?openDash():showMenu()}}catch(e){}
-function draw(){
+function draw(){const ORD=ordf();
  const R=D.filter(r=>(!tk||r.toko==tk)&&(!q||r.name.toLowerCase().includes(q))).map(r=>{const o=rng?r.p7:r.p;return{...r,o,s:sc(o)}});
  const jo=J.map(()=>[0,0]),agg={},wc=J.map(()=>0);
  R.forEach(r=>{for(const n in r.o){const[a,b]=r.o[n],j=ALL[n]?.j;if(j!=null){jo[j][0]+=a;jo[j][1]+=b}agg[n]=(agg[n]||0)+b}});
  for(const n in agg)if(agg[n]>0&&ALL[n])wc[ALL[n].j]++;
  const js=jo.map(a=>a[0]+a[1]?Math.round(a[0]/(a[0]+a[1])*100):null),ok=R.filter(r=>r.s!==null),avg=ok.length?Math.round(ok.reduce((a,r)=>a+r.s,0)/ok.length):null;
  const idle=R.filter(r=>Date.now()-new Date(r.t)>3*864e5).length,need=ok.filter(r=>r.s<70).length,miss=Object.values(agg).reduce((a,b)=>a+b,0),tot=ALL.filter(Boolean).length;
- const chart=chart2(js,js.map((v,i)=>"Pos "+(i+1)),100,v=>v+"%");
+ const chart=chart2(ORD.map(i=>js[i]),ORD.map((i,x)=>"Pos "+(x+1)),100,v=>v+"%");
  const ord=J.map((j,i)=>i).sort((a,b)=>(js[a]??101)-(js[b]??101)).slice(0,3);
  $("#ch").innerHTML=chips([["RA terdaftar",R.length,"yel"],["Rata-rata checklist",avg===null?"–":avg+"%","lav"],["Tidak aktif >3 hari",idle,"org"],["Poin terlewat",miss,"pink"]]);
  $("#out").innerHTML=`<div class="mg" id="ov"><div class="ov"><div class="row"><b>Overview skor checklist per pos</b><span class="pill">${rng?"7 hari":"Semua waktu"}</span></div>${chart}</div>
  <div class="ac p"><div class="ic">⚠️</div><b>Poin Terlewat</b><div class="big">${miss}×</div></div>
  <div class="ac k"><div class="ic">👥</div><b>Perlu Pendampingan</b><div class="big">${need} RA</div><small style="color:#fff9">skor di bawah 70%</small></div></div>
- <div class="three" id="pos">${ord.map(i=>`<div class="pc"><div class="tile">${J[i].e}</div><b>${i+1}. ${esc(J[i].n)}</b><div class="row"><small>Skor</small><b>${js[i]===null?"–":js[i]+"%"}</b></div><div class="pbar"><i style="width:${js[i]||0}%;background:${col(js[i])}"></i></div><span class="tag">${wc[i]} poin lemah</span></div>`).join("")}</div>`;
+ <div class="three" id="pos">${ord.map(i=>`<div class="pc"><div class="tile">${J[i].e}</div><b>${ORD.indexOf(i)+1}. ${esc(J[i].n)}</b><div class="row"><small>Skor</small><b>${js[i]===null?"–":js[i]+"%"}</b></div><div class="pbar"><i style="width:${js[i]||0}%;background:${col(js[i])}"></i></div><span class="tag">${wc[i]} poin lemah</span></div>`).join("")}</div>`;
  const L=[...R].sort(tb?(a,b)=>(a.s??101)-(b.s??101):(a,b)=>new Date(b.t)-new Date(a.t)),tkm={};
  R.forEach(r=>{if(r.s!==null)(tkm[r.toko]=tkm[r.toko]||[]).push(r.s)});
  $("#rt").innerHTML=`<div class="rt" id="rtl"><div class="row"><b>RA</b><small>${R.length} orang</small></div><div class="tabs"><button class="${tb?"":"on"}" onclick="tb=0;draw()">Aktivitas</button><button class="${tb?"on":""}" onclick="tb=1;draw()">Perlu bantuan</button></div>`+L.map(r=>{
